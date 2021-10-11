@@ -938,6 +938,16 @@ emoji-regex@^8.0.0:
   resolved "https://registry.npmmirror.com/emoji-regex/download/emoji-regex-8.0.0.tgz?cache=0&sync_timestamp=1632751333727&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Femoji-regex%2Fdownload%2Femoji-regex-8.0.0.tgz#e818fd69ce5ccfcb404594f842963bf53164cc37"
   integrity sha1-6Bj9ac5cz8tARZT4QpY79TFkzDc=
 
+emulators-ui@^0.71.7:
+  version "0.71.7"
+  resolved "https://registry.npmmirror.com/emulators-ui/download/emulators-ui-0.71.7.tgz#cfa425a9edfdb3168e19a1a267a050d9e9b4667c"
+  integrity sha1-z6Qlqe39sxaOGaGiZ6BQ2em0Znw=
+
+emulators@^0.72.0:
+  version "0.72.0"
+  resolved "https://registry.npmmirror.com/emulators/download/emulators-0.72.0.tgz#86f301421e0ca9aaa43a9e14d73e0ee61ebde35d"
+  integrity sha1-hvMBQh4MqaqkOp4U1z4O5h69410=
+
 encodeurl@^1.0.2:
   version "1.0.2"
   resolved "https://registry.nlark.com/encodeurl/download/encodeurl-1.0.2.tgz#ad3ff4c86ec2d029322f5a02c3a9a606c95b3f59"

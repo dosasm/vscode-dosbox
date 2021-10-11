@@ -6,7 +6,7 @@ class Logger{
     warn=console.warn;
     error=console.error;
     channel(text:string){
-        Logger.channel.append(text);
+        Logger.channel.append(text.trim()+'\n');
         return Logger.channel;
     }
 }
