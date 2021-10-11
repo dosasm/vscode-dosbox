@@ -62,4 +62,4 @@ const webExtensionConfig = {
 	devtool: 'nosources-source-map' // create a source map that points to the original source file
 };
 
-module.exports = [ webExtensionConfig ];
+module.exports = [ webExtensionConfig,require('./web/webpack.config') ];

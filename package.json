@@ -1,7 +1,7 @@
 {
-	"name": "test-web",
-	"displayName": "test-web",
-	"description": "",
+	"name": "vscode-dosbox",
+	"displayName": "VSCode DOSBox",
+	"description": "DOSBox interface for VSCode",
 	"version": "0.0.1",
 	"engines": {
 		"vscode": "^1.61.0"
