@@ -10,7 +10,7 @@
 		"Other"
 	],
 	"activationEvents": [
-        "onCommand:test-web.helloWorld"
+		"onCommand:test-web.helloWorld"
 	],
 	"browser": "./dist/web/extension.js",
 	"contributes": {
@@ -18,6 +18,18 @@
 			{
 				"command": "test-web.helloWorld",
 				"title": "Hello World"
+			},
+			{
+				"command": "dosbox.openDosbox",
+				"title": "Open Dosbox"
+			},
+			{
+				"command": "dosbox.openJsdos",
+				"title": "Open jsdos in webview"
+			},
+			{
+				"command": "dosbox.startJsdos",
+				"title": "start jsdos in your machine(node environment)"
 			}
 		]
 	},
@@ -32,19 +44,20 @@
 		"run-in-browser": "vscode-test-web --browserType=chromium --extensionDevelopmentPath=. ."
 	},
 	"devDependencies": {
-		"@types/vscode": "^1.61.0",
 		"@types/mocha": "^9.0.0",
-		"eslint": "^7.32.0",
+		"@types/vscode": "^1.61.0",
+		"@types/webpack-env": "^1.16.2",
 		"@typescript-eslint/eslint-plugin": "^4.31.1",
 		"@typescript-eslint/parser": "^4.31.1",
-		"mocha": "^9.1.1",
-		"typescript": "^4.4.3",
 		"@vscode/test-web": "^0.0.13",
-		"ts-loader": "^9.2.5",
-		"webpack": "^5.52.1",
-		"webpack-cli": "^4.8.0",
-		"@types/webpack-env": "^1.16.2",
 		"assert": "^2.0.0",
-		"process": "^0.11.10"
+		"eslint": "^7.32.0",
+		"jszip": "^3.7.1",
+		"mocha": "^9.1.1",
+		"process": "^0.11.10",
+		"ts-loader": "^9.2.5",
+		"typescript": "^4.4.3",
+		"webpack": "^5.52.1",
+		"webpack-cli": "^4.8.0"
 	}
 }
