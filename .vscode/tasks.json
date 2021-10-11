@@ -5,11 +5,19 @@
 	"tasks": [
 		{
 			"type": "npm",
-			"script": "compile-web",
+			"script": "compile-all",
 			"group": {
 				"kind": "build",
 				"isDefault": true
 			},
+			"problemMatcher": [
+				"$ts-webpack",
+				"$tslint-webpack"
+			]
+		},
+		{
+			"type": "npm",
+			"script": "compile-web",
 			"problemMatcher": [
 				"$ts-webpack",
 				"$tslint-webpack"
