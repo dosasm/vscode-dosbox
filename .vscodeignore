@@ -4,6 +4,7 @@ src/**
 out/**
 node_modules/**
 .gitignore
+.gitmodules
 vsc-extension-quickstart.md
 webpack.config.js
 .yarnrc
@@ -11,3 +12,13 @@ webpack.config.js
 **/.eslintrc.json
 **/*.map
 **/*.ts
+
+!node_modules/emulators/dist/*.*
+!node_modules/emulators-ui/dist/*.*
+**/test/
+
+web/
+!web/dist
+!web/res
+
+emu/
