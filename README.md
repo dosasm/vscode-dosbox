@@ -4,13 +4,14 @@ Offer a Interface for running DOSBox and its variants in your platform
 
 ## support DOSBox and platform
 
-- [ ] JSDos: all platform including web
-- [ ] DOSBox: binaries packaged for windows system, need to install manually for other OS
-- [ ] DOSBox-x: binaries packaged for windows system, need to install manually for other OS
-- [ ] MSDos-player: binaries packaged for windows system, need to install manually for other OS
+- JSDos: all platform including web
+- DOSBox: binaries packaged for windows system, need to install manually for other OS
+- DOSBox-x: binaries packaged for windows system, need to install manually for other OS
+- MSDos-player: binaries packaged for windows system, need to install manually for other OS
 
 ## Features
 
+- [x] offer command for open supported platform
 - [ ] use this extension for DOS game playing
 - [ ] offer API for other extensions
 

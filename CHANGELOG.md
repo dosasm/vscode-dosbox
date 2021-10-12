@@ -1,9 +1,5 @@
 # Change Log
 
-All notable changes to the "test-web" extension will be documented in this file.
+## preview
 
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
-
-## [Unreleased]
-
-- Initial release
+- 0.0.1: offer basic commands
