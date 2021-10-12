@@ -13,12 +13,14 @@ webpack.config.js
 **/*.map
 **/*.ts
 
-!node_modules/emulators/dist/*.*
-!node_modules/emulators-ui/dist/*.*
+.github/
+
+!node_modules/emulators*/package.json
+!node_modules/emulators*/dist/*.*
 **/test/
 
 web/
-!web/dist
+!web/dist/index.js
 !web/res
 
 emu/
