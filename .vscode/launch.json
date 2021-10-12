@@ -16,7 +16,7 @@
 			"outFiles": [
 				"${workspaceFolder}/dist/**/*.js"
 			],
-			"preLaunchTask": "npm: compile-all"
+			"preLaunchTask": "npm: compile"
 		},
 		{
 			"name": "Run Web Extension ",
@@ -30,10 +30,25 @@
 			"outFiles": [
 				"${workspaceFolder}/dist/web/**/*.js"
 			],
-			"preLaunchTask": "npm: watch-web"
+			"preLaunchTask": "npm: watch"
 		},
 		{
 			"name": "Extension Tests",
+			"type": "extensionHost",
+			"request": "launch",
+			"runtimeExecutable": "${execPath}",
+			"args": [
+				"--disable-extensions",
+				"--extensionDevelopmentPath=${workspaceFolder}",
+				"--extensionTestsPath=${workspaceFolder}/out/test/suite/index"
+			],
+			"outFiles": [
+				"${workspaceFolder}/out/**/*.js"
+			],
+			"preLaunchTask": "npm: compile-tsc"
+		},
+		{
+			"name": "Extension Tests web",
 			"type": "extensionHost",
 			"debugWebWorkerHost": true,
 			"request": "launch",
@@ -45,7 +60,7 @@
 			"outFiles": [
 				"${workspaceFolder}/dist/web/**/*.js"
 			],
-			"preLaunchTask": "npm: watch-web"
+			"preLaunchTask": "npm: watch"
 		}
 	]
 }

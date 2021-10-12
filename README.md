@@ -5,9 +5,9 @@ Offer a Interface for running DOSBox and its variants in your platform
 ## support DOSBox and platform
 
 - [ ] JSDos: all platform including web
-- [ ] DOSBox: need to install manually
-- [ ] DOSBox-x: binaries packaged for windows system
-- [ ] MSDos-player: need to install manually
+- [ ] DOSBox: binaries packaged for windows system, need to install manually for other OS
+- [ ] DOSBox-x: binaries packaged for windows system, need to install manually for other OS
+- [ ] MSDos-player: binaries packaged for windows system, need to install manually for other OS
 
 ## Features
 

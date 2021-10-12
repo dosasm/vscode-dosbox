@@ -1,28 +1,29 @@
 import * as vscode from 'vscode';
+import { RemoteCi } from './ci';
 
 export function activate(context: vscode.ExtensionContext) {
 
-	let disposable = vscode.commands.registerCommand('dosbox.openJsdos', (jsdosUrl?:vscode.Uri) => {
+    let disposable = vscode.commands.registerCommand('dosbox.openJsdos', (jsdosUrl?: vscode.Uri) => {
         console.log(context.extensionUri);
-        const panel= vscode.window.createWebviewPanel(
+        const panel = vscode.window.createWebviewPanel(
             "jsdos pannel",
-            'jsdos'+new Date().toLocaleTimeString(),
+            'jsdos' + new Date().toLocaleTimeString(),
             vscode.ViewColumn.One,
             {
-                enableScripts:true,
+                enableScripts: true,
                 localResourceRoots: [
-                    vscode.Uri.joinPath(context.extensionUri,'node_modules/emulators/dist'),
-                    vscode.Uri.joinPath(context.extensionUri,'node_modules/emulators-ui/dist'),
-                    vscode.Uri.joinPath(context.extensionUri,'web/dist'),
-                    vscode.Uri.joinPath(context.extensionUri,'web/res/')
+                    vscode.Uri.joinPath(context.extensionUri, 'node_modules/emulators/dist'),
+                    vscode.Uri.joinPath(context.extensionUri, 'node_modules/emulators-ui/dist'),
+                    vscode.Uri.joinPath(context.extensionUri, 'web/dist'),
+                    vscode.Uri.joinPath(context.extensionUri, 'web/res/')
                 ]
             }
-            );
+        );
         const asWeb = (str: string): vscode.Uri => {
-            const fullpath = vscode.Uri.joinPath(context.extensionUri,str);
+            const fullpath = vscode.Uri.joinPath(context.extensionUri, str);
             return panel.webview.asWebviewUri(fullpath);
         };
-        panel.webview.html=`<!DOCTYPE html>
+        panel.webview.html = `<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -48,12 +49,12 @@ export function activate(context: vscode.ExtensionContext) {
     </div>
     <script>
         emulators.pathPrefix = "${asWeb("/node_modules/emulators/dist/")}";
-        bundlePath="${jsdosUrl?jsdosUrl:asWeb("web/res/empty.jsdos")}"
+        bundlePath="${jsdosUrl ? jsdosUrl : asWeb("web/res/empty.jsdos")}"
     </script>
     <script src='${asWeb("web/dist/index.js")}'></script>
 </body>
 </html>`;
-	});
+    });
 
-	context.subscriptions.push(disposable);
+    context.subscriptions.push(disposable);
 }

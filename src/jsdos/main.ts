@@ -8,12 +8,11 @@ const fs=vscode.workspace.fs;
 
 export function activate(context: vscode.ExtensionContext) {
     let disposable = vscode.commands.registerCommand('dosbox.startJsdos', async (jsdosUrl?: vscode.Uri) => {
-        logger.channel((global as any).emulators ? 'eeee' : "nnnn").show();
         if (emulators !== undefined) {
             emulators.pathPrefix = context.asAbsolutePath('/node_modules/emulators/dist/');
-            const bundle=await fs.readFile(vscode.Uri.joinPath(context.extensionUri,'web/res/empty.jsdos'));
+            const url=jsdosUrl?jsdosUrl:vscode.Uri.joinPath(context.extensionUri,'web/res/empty.jsdos');
+            const bundle=await fs.readFile(url);
             const ci=await emulators.dosboxDirect(bundle);
- logger.channel(ci.width().toString()).show();
             return ci;
         }
     });
