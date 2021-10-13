@@ -2,6 +2,7 @@ out
 dist
 node_modules
 .vscode-test-web/
+.vscode-test/
 *.vsix
 
 **/.DS_store

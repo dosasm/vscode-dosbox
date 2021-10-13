@@ -3,10 +3,10 @@
 	"publisher": "xsro",
 	"displayName": "VSCode DOSBox",
 	"description": "DOSBox interface for VSCode",
-	"version": "0.0.2",
+	"version": "0.0.3",
 	"preview": true,
 	"engines": {
-		"vscode": "^1.61.0"
+		"vscode": "^1.47.0"
 	},
 	"author": {
 		"name": "dosasm",
@@ -56,7 +56,7 @@
 		"test": "vscode-test-web --browserType=chromium --extensionDevelopmentPath=. --extensionTestsPath=dist/web/test/suite/index.js",
 		"pretest": "yarn run compile",
 		"compile-tsc": "tsc -p .",
-		"test-local": "tsc -p . && node out/test/index/js",
+		"test-local": "tsc -p . && node out/test/runTest.js",
 		"vscode:prepublish": "yarn run package",
 		"compile": "webpack",
 		"watch": "webpack --watch",

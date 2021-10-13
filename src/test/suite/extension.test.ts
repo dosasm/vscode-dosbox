@@ -13,13 +13,17 @@ suite('Web Extension Test Suite', () => {
 	});
 
 	test('get API', async () => {
-		const a = await vscode.commands.executeCommand('dosbox.openDosbox');
 		const extension = vscode.extensions.getExtension('xsro.vscode-dosbox');
-		const api: myExtension.API | undefined = extension?.exports;
+		let api: myExtension.API | undefined = await extension?.activate();
+		if (api === undefined) {
+			api = extension?.exports;
+		}
 		assert.ok(api !== undefined, JSON.stringify(api));
 		if (api) {
 			const ci = await api.jsdos();
 			assert.ok(ci.width() !== undefined);
+
+			ci.exit();
 		}
 	});
 });
