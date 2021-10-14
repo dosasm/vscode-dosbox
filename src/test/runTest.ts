@@ -18,8 +18,9 @@ async function main(): Promise<void> {
 		// Download VS Code, unzip it and run the integration test
 		await runTests({ extensionDevelopmentPath, extensionTestsPath, launchArgs });
 
-		//test in all supported version of vscode
-		for (let ver = 60; ver > 46; ver--) {
+		//test in all supported version of vscode 
+		//last test says ok with 1.47.1 but the platform specified extension should be over 1.61, so the following make no sense now
+		for (let ver = 60; ver >= 61; ver--) {
 			await DELAY(20000);
 			await runTests(
 				{

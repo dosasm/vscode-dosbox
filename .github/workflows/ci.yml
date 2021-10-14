@@ -1,12 +1,34 @@
 name: CI
 on:
   push:
-    # branches:
-    #   - "**"
+    branches:
+      - "**"
     tags:
       - "v*"
 
 jobs:
+  test:
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14.x
+      - run: yarn
+      - run: xvfb-run -a yarn test
+        if: runner.os == 'Linux'
+      - run: yarn test
+        if: runner.os != 'Linux'
+      - run: xvfb-run -a yarn test-local
+        if: runner.os == 'Linux'
+      - run: yarn test-local
+        if: runner.os != 'Linux'
+
   build:
     strategy:
       matrix:
@@ -24,37 +46,18 @@ jobs:
             arch: arm64
             npm_config_arch: arm
           - os: ubuntu-latest
-            platform: linux
-            arch: x64
-            npm_config_arch: x64
-          - os: ubuntu-latest
-            platform: linux
-            arch: arm64
-            npm_config_arch: arm64
-          - os: ubuntu-latest
-            platform: linux
-            arch: armhf
-            npm_config_arch: arm
-          - os: ubuntu-latest
-            platform: alpine
-            arch: x64
-            npm_config_arch: x64
-          - os: macos-latest
-            platform: darwin
-            arch: x64
-            npm_config_arch: x64
-          - os: macos-latest
-            platform: darwin
-            arch: arm64
-            npm_config_arch: arm64
+            platform: nonwin
+            arch: all
     runs-on: ${{ matrix.os }}
+    needs: test
+    if: success()
     steps:
       - uses: actions/checkout@v2
         with:
-           submodules: true
+          submodules: true
       - uses: actions/setup-node@v2
         with:
-          node-version: 14.x
+          node-version: "14"
       - run: yarn
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -62,6 +65,9 @@ jobs:
       - shell: pwsh
         run: echo "target=${{ matrix.platform }}-${{ matrix.arch }}" >> $env:GITHUB_ENV
       - run: npx vsce package --target ${{ env.target }}
+        if: runner.os != 'Linux'
+      - run: npx vsce package
+        if: runner.os == 'Linux'
       - uses: actions/upload-artifact@v2
         with:
           name: ${{ env.target }}

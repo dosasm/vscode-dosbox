@@ -6,7 +6,7 @@
 	"version": "0.0.3",
 	"preview": true,
 	"engines": {
-		"vscode": "^1.47.0"
+		"vscode": "^1.61.0"
 	},
 	"author": {
 		"name": "dosasm",
@@ -60,7 +60,7 @@
 		"vscode:prepublish": "yarn run package",
 		"compile": "webpack",
 		"watch": "webpack --watch",
-		"prepackage": "node develop.js",
+		"prepackage": "node dev/main.js",
 		"package": "webpack --mode production --devtool hidden-source-map",
 		"lint": "eslint src --ext ts",
 		"run-in-browser": "vscode-test-web --browserType=chromium --extensionDevelopmentPath=. ."
@@ -74,6 +74,7 @@
 		"@typescript-eslint/parser": "^4.31.1",
 		"@vscode/test-web": "^0.0.13",
 		"assert": "^2.0.0",
+		"download": "^8.0.0",
 		"eslint": "^7.32.0",
 		"glob": "^7.2.0",
 		"jszip": "^3.7.1",
