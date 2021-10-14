@@ -1,30 +1,26 @@
 # vscode-DOSBox
 
-Offer a Interface for running DOSBox and its variants in your platform
+Offer an Interface for running DOSBox and its variants in your platform.
 
-## support DOSBox and platform
+## supported DOSBox and platforms
 
 - JSDos: all platform including web
 - DOSBox: binaries packaged for windows system, need to install manually for other OS
 - DOSBox-x: binaries packaged for windows system, need to install manually for other OS
-- MSDos-player: binaries packaged for windows system, need to install manually for other OS
+- MSDos-player: binaries packaged for windows system
 
 ## Features
 
-- [x] offer command for open supported platform
-- [ ] use this extension for DOS game playing
-- [ ] offer API for other extensions
+- offer command for open supported platform
+- offer API for other extensions: see [api.ts](src/api.ts)
+- (TODO) use this extension for DOS game playing
 
 ## Extension Settings
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
-
-For example:
-
 This extension contributes the following settings:
 
-* `myExtension.enable`: enable/disable this extension
-* `myExtension.thing`: set to `blah` to do something
+* `vscode-dosbox.command.dosbox`:  customize your command to open dosbox
+* `vscode-dosbox.command.dosboxX`: customize your command to open dosbox-x
 
 ## Known Issues
 
