@@ -7,28 +7,6 @@ on:
       - "v*"
 
 jobs:
-  test:
-    strategy:
-      matrix:
-        os: [macos-latest, ubuntu-latest, windows-latest]
-    runs-on: ${{ matrix.os }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Install Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: 14.x
-      - run: yarn
-      - run: xvfb-run -a yarn test
-        if: runner.os == 'Linux'
-      - run: yarn test
-        if: runner.os != 'Linux'
-      - run: xvfb-run -a yarn test-local
-        if: runner.os == 'Linux'
-      - run: yarn test-local
-        if: runner.os != 'Linux'
-
   build:
     strategy:
       matrix:
@@ -46,11 +24,30 @@ jobs:
             arch: arm64
             npm_config_arch: arm
           - os: ubuntu-latest
-            platform: nonwin
-            arch: all
+            platform: linux
+            arch: x64
+            npm_config_arch: x64
+          - os: ubuntu-latest
+            platform: linux
+            arch: arm64
+            npm_config_arch: arm64
+          - os: ubuntu-latest
+            platform: linux
+            arch: armhf
+            npm_config_arch: arm
+          - os: ubuntu-latest
+            platform: alpine
+            arch: x64
+            npm_config_arch: x64
+          - os: macos-latest
+            platform: darwin
+            arch: x64
+            npm_config_arch: x64
+          - os: macos-latest
+            platform: darwin
+            arch: arm64
+            npm_config_arch: arm64
     runs-on: ${{ matrix.os }}
-    needs: test
-    if: success()
     steps:
       - uses: actions/checkout@v2
         with:
@@ -58,16 +55,28 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: "14"
-      - run: yarn
+      - shell: pwsh
+        run: echo "target=${{ matrix.platform }}-${{ matrix.arch }}" >> $env:GITHUB_ENV
+      - name: install dependencies with yarn
+        run: yarn
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           npm_config_arch: ${{ matrix.npm_config_arch }}
-      - shell: pwsh
-        run: echo "target=${{ matrix.platform }}-${{ matrix.arch }}" >> $env:GITHUB_ENV
-      - run: npx vsce package --target ${{ env.target }}
-        if: runner.os != 'Linux'
-      - run: npx vsce package
+
+      - name: test in local machine and web environment
+        run: echo '[2] test'
+      - run: xvfb-run -a yarn test
         if: runner.os == 'Linux'
+      - run: yarn test
+        if: runner.os != 'Linux'
+      - run: xvfb-run -a yarn test-local
+        if: runner.os == 'Linux'
+      - run: yarn test-local
+        if: runner.os != 'Linux'
+
+      - name: package the extension
+        run: echo '[3] package'
+      - run: npx vsce package --target ${{ env.target }}
       - uses: actions/upload-artifact@v2
         with:
           name: ${{ env.target }}

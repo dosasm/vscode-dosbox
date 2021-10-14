@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const cp = require('child_process');
+const os = require('os');
 const download = require('download');
 
 //from https://raw.githubusercontent.com/joncampbell123/dosbox-x/master/INSTALL.md
@@ -39,4 +39,16 @@ async function updateDosboxX(platform, arch) {
     }
 }
 
-module.exports = updateDosboxX;
+async function updateDosboxBin() {
+    let platform = os.platform();
+    let arch = os.arch();
+    console.log(
+        `update binary files of dosbox...
+    for target ${process.env.target} in ${platform} ${arch}`);
+    if (process.env.target) {
+        [platform, arch] = process.env.target.split('-');
+    }
+    await updateDosboxX(platform, arch);
+}
+
+updateDosboxBin();

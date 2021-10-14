@@ -23,4 +23,6 @@ web/
 !web/dist/index.js
 !web/res
 
+dev/
+
 emu/
