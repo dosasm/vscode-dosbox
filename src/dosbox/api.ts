@@ -6,7 +6,9 @@ export interface DosboxResult {
     exitCode: number | null;
 }
 
-export function dosbox(command: string, cwd?: string, param?: string, on?: { stdout?: (val: string) => void, stderr?: (val: string) => void }) {
+function run(cmd: string, params: string = "", cwd?: string, cpHandler?: (p: cp.ChildProcess) => void) {
+
+    const command = cmd.includes('<params>') ? cmd.replace('<params>', params) : cmd + " " + params;
     return new Promise<DosboxResult>(
         (resolve, reject) => {
             const p = cp.exec(command, { cwd }, (error, stdout, stderr) => {
@@ -17,6 +19,13 @@ export function dosbox(command: string, cwd?: string, param?: string, on?: { std
                     resolve({ stdout, stderr, exitCode: p.exitCode });
                 }
             });
+            if (cpHandler) {
+                cpHandler(p);
+            }
         }
     );
 }
+
+export const api = {
+    runDosboxLike: run,
+};

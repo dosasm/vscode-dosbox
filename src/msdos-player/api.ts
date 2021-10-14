@@ -20,5 +20,6 @@ export class MsdosPlayer {
 
         );
         t.show();
+        return t;
     }
 }

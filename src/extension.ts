@@ -1,14 +1,15 @@
 import * as vscode from 'vscode';
-import { logger } from './util/logger';
 import * as dosbox from './dosbox/main';
 import * as player from './msdos-player/main';
 import * as jsdos from './jsdos/main';
 import * as jsdosWeb from './jsdos-web/main';
+import * as D from './api';
+export { API } from './api';
 
-export function activate(context: vscode.ExtensionContext) {
+export function activate(context: vscode.ExtensionContext): D.API {
 	console.log('run in nonweb mode:' + context.extensionMode.toString());
 
-	const api = {
+	const api: D.API = {
 		...dosbox.activate(context),
 		...player.activate(context),
 		...jsdos.activate(context),
@@ -17,7 +18,5 @@ export function activate(context: vscode.ExtensionContext) {
 
 	return api;
 }
-
-export type API = ReturnType<typeof activate>;
 
 export function deactivate() { }

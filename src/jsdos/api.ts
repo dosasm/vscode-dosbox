@@ -3,10 +3,10 @@ import { CommandInterface, Emulators } from 'emulators/dist/types/emulators';
 
 import 'emulators';
 import { createBundle } from './bundle';
-export const emulators: Emulators = (global as any).emulators ? (global as any).emulators : undefined;
+const emulators: Emulators = (global as any).emulators ? (global as any).emulators : undefined;
 const fs = vscode.workspace.fs;
 
-export async function jsdos(bundle?: vscode.Uri) {
+async function jsdos(bundle?: vscode.Uri) {
     if (emulators !== undefined) {
         const bundleData = bundle ?
             await fs.readFile(bundle)
@@ -19,3 +19,8 @@ export async function jsdos(bundle?: vscode.Uri) {
         throw new Error("extension can't load jsdos");
     }
 }
+
+export const api = {
+    jsdos,
+    emulators,
+};

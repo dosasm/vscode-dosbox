@@ -50,6 +50,38 @@
 				"command": "dosbox.openMsdosPlayer",
 				"title": "Open msdos-player in terminal"
 			}
+		],
+		"configuration": [
+			{
+				"title": "vscode-dosbox",
+				"properties": {
+					"vscode-dosbox.command.dosbox": {
+						"default": "dosbox",
+						"type": "string",
+						"markdownDescription": "The command for open your DOSBox\n\n By default the extension will pass dosbox parameters after the command, use `<param>` if you want to insert"
+					},
+					"vscode-dosbox.command.dosboxX": {
+						"default": "dosbox-x -nopromptfolder",
+						"type": "string",
+						"markdownDescription": "The command for open your DOSBox-x\n\n By default the extension will pass dosbox parameters after the command, use `<param>` if you want to insert"
+					},
+					"vscode-dosbox.search.windows": {
+						"type": "array",
+						"markdownDescription": "The paths for search your dosbox(or dosbox-x) in windows",
+						"items": {
+							"type": "string"
+						},
+						"default": [
+							"C:\\Program Files\\",
+							"C:\\"
+						]
+					},
+					"vscode-dosbox.command.msdosShell.": {
+						"type": "string",
+						"markdownDescription": "The command for open your Terminal and attach msdos"
+					}
+				}
+			}
 		]
 	},
 	"scripts": {
