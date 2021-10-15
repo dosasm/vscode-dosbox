@@ -1,4 +1,6 @@
 import * as cp from 'child_process';
+import * as vscode from 'vscode';
+import { Conf } from './conf';
 
 export interface DosboxResult {
     stdout: string,
@@ -28,4 +30,6 @@ function run(cmd: string, params: string = "", cwd?: string, cpHandler?: (p: cp.
 
 export const api = {
     runDosboxLike: run,
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    Conf,
 };
