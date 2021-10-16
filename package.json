@@ -65,6 +65,21 @@
 						"type": "string",
 						"markdownDescription": "The command for open your DOSBox-x\n\n By default the extension will pass dosbox parameters after the command, use `<param>` if you want to insert"
 					},
+					"vscode-dosbox.dosboxX.lang": {
+						"type": "string",
+						"default": "follow",
+						"enum": [
+							"en",
+							"zh_CN",
+							"follow"
+						],
+						"markdownDescription": "set builtin DOSBoxX configuration",
+						"markdownEnumDescriptions": [
+							"use default English config",
+							"use zh_CN config",
+							"follow vscode's language config"
+						]
+					},
 					"vscode-dosbox.search.windows": {
 						"type": "array",
 						"markdownDescription": "The paths for search your dosbox(or dosbox-x) in windows",

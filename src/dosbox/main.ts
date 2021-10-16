@@ -29,6 +29,8 @@ export async function activate(context: vscode.ExtensionContext) {
 	const confpath = vscode.Uri.joinPath(context.globalStorageUri, 'dosbox.conf');
 	const cwd = process.platform === 'win32' ? context.asAbsolutePath('emu/win/dosbox') : undefined;
 	const dosbox = new db.DOSBox(cmd, confpath, cwd);
+
+
 	await dosbox.setConf(dosboxConfigurationFile.box);
 
 	const _xcmd: string | undefined = vscode.workspace.getConfiguration('vscode-dosbox').get('command.dosboxX');
@@ -36,7 +38,14 @@ export async function activate(context: vscode.ExtensionContext) {
 	const xconfpath = vscode.Uri.joinPath(context.globalStorageUri, 'dosbox-x.conf');
 	const xcwd = process.platform === 'win32' ? context.asAbsolutePath('emu/win/dosbox_x') : undefined;
 	const dosboxX = new db.DOSBox(xcmd, xconfpath, xcwd);
-	await dosboxX.setConf(dosboxConfigurationFile.boxXzh);
+
+	let confPath = dosboxConfigurationFile.boxX;
+	const _lang: string | undefined = vscode.workspace.getConfiguration('vscode-dosbox').get('dosboxX.lang');
+	const lang = _lang === 'follow' ? vscode.env.language : _lang;
+	switch (lang) {
+		case 'zh-cn': confPath = dosboxConfigurationFile.boxXzh;
+	}
+	await dosboxX.setConf(confPath);
 
 	let disposable1 = vscode.commands.registerCommand('dosbox.openDosbox', (params?: string[], cpHandler?: (p: cp.ChildProcess) => void) => {
 		return dosbox.run(params, cpHandler);

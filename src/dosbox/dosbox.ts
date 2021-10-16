@@ -40,7 +40,7 @@ export class DOSBox implements api.Dosbox {
         const cmd = this.command;
         const parameter = Array.isArray(params) ? params.join(" ") : `-conf "${this.dstConfPath.fsPath}"`;
         const command = cmd.includes('<params>') ? cmd.replace('<params>', parameter) : cmd + " " + parameter;
-        console.log(this.dstConfPath.fsPath, command);
+        console.log(command);
         return new Promise<DosboxResult>(
             (resolve, reject) => {
                 const p = cp.exec(command, { cwd: this.cwd }, (error, stdout, stderr) => {
