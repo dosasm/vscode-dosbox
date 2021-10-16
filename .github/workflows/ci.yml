@@ -52,6 +52,7 @@ jobs:
       - uses: actions/checkout@v2
         with:
           submodules: true
+
       - uses: actions/setup-node@v2
         with:
           node-version: "14"
@@ -63,20 +64,31 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           npm_config_arch: ${{ matrix.npm_config_arch }}
 
-      - name: test in local machine and web environment
-        run: echo '[2] test'
-      - run: xvfb-run -a yarn test
+      - name: linux Install dosbox and dosbox-x tool
+        run: |
+          sudo apt-get update
+          sudo apt-get install dosbox
         if: runner.os == 'Linux'
-      - run: yarn test
-        if: runner.os != 'Linux'
-      - run: xvfb-run -a yarn test-local
-        if: runner.os == 'Linux'
-      - run: yarn test-local
-        if: runner.os != 'Linux'
+      - name: macOS Install dosbox and dosbox-x tool
+        run: |
+          brew update
+          brew install dosbox
+          brew install dosbox-x
+        if: runner.os == 'macOS'
 
-      - name: package the extension
-        run: echo '[3] package'
-      - run: npx vsce package --target ${{ env.target }}
+      - name: compile and test
+        run: yarn compile
+      - run: |
+          yarn test-local
+          yarn test
+        if: runner.os != 'Linux' && matrix.arch != 'arm64'
+      - run: |
+          xvfb-run -a yarn test-local
+          xvfb-run -a yarn test
+        if: runner.os == 'Linux'
+
+      - name: Package the extension
+        run: npx vsce package --target ${{ env.target }}
       - uses: actions/upload-artifact@v2
         with:
           name: ${{ env.target }}

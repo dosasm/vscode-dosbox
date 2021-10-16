@@ -37,9 +37,6 @@ suite('Web Extension Test Suite', () => {
 
 	test('test dosbox API', async function () {
 
-		if (process.platform !== 'win32') {
-			this.skip();
-		}
 		const extension = vscode.extensions.getExtension('xsro.vscode-dosbox');
 		let api: myExtension.API | undefined = await extension?.activate();
 
@@ -61,7 +58,7 @@ suite('Web Extension Test Suite', () => {
 	});
 
 	test('test dosbox-x API', async function () {
-		if (process.platform !== 'win32') {
+		if (process.platform === 'linux') {
 			this.skip();
 		}
 		const extension = vscode.extensions.getExtension('xsro.vscode-dosbox');
