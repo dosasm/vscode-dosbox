@@ -1,7 +1,12 @@
 import { CommandInterface, Emulators } from 'emulators';
 import * as vscode from 'vscode';
-import { DosboxResult } from './dosbox/api';
-import * as cp from 'child_process';
+import { DosboxResult } from './dosbox/dosbox';
+
+export interface Dosbox {
+    updateConf(section: string, key: string, value: string | number | boolean): boolean,
+    updateAutoexec(context: string[]): void,
+    run(params?: string[]): Promise<DosboxResult>
+}
 
 export interface API {
     /**
@@ -25,16 +30,13 @@ export interface API {
     emulators: Emulators;
     /**
      * run DOSBox via child_process
-     * 
-     * @param params the parameters passed to dosbox
      */
-    dosbox: (params: string, cpHandler?: (p: cp.ChildProcess) => void) => Promise<DosboxResult>;
+    dosbox: Dosbox
+    ;
     /**
      * run DOSBox-x via child_process
-     * 
-     * @param params the parameters passed to dosbox-x
      */
-    dosboxX: (params: string, cpHandler?: (p: cp.ChildProcess) => void) => Promise<DosboxResult>;
+    dosboxX: Dosbox;
     /**
      * run msdos player via cmd.exe
      * 
