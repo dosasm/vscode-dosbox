@@ -44,13 +44,14 @@ suite('Web Extension Test Suite', () => {
 
 		if (api) {
 			const data = Math.random().toString();
+			const fileName = 'DOSBOX.TXT';
 			api.dosbox.updateAutoexec([
 				`mount c ${testDir}`,
 				'c:',
-				`echo ${data} >dosbox.txt`,
+				`echo ${data} >${fileName}`,
 				'exit']);
 			await api.dosbox.run();
-			const testFile = path.join(testDir, 'dosbox.txt');
+			const testFile = path.join(testDir, fileName);
 			assert.ok(fs.existsSync(testFile));
 			const data2 = fs.readFileSync(testFile, { encoding: 'utf-8' });
 			assert.equal(data, data2.trim());
@@ -68,13 +69,14 @@ suite('Web Extension Test Suite', () => {
 
 		if (api) {
 			const data = Math.random().toString();
+			const fileName = 'DOSBOXX.TXT';
 			api.dosboxX.updateAutoexec([
 				`mount c ${testDir}`,
 				'c:',
-				`echo ${data} >dosboxx.txt`,
+				`echo ${data} > ${fileName}`,
 				'exit']);
 			await api.dosboxX.run();
-			const testFile = path.join(testDir, 'dosboxx.txt');
+			const testFile = path.join(testDir, fileName);
 			assert.ok(fs.existsSync(testFile));
 			const data2 = fs.readFileSync(testFile, { encoding: 'utf-8' });
 			assert.equal(data, data2.trim());
