@@ -39,6 +39,9 @@ jobs:
             platform: alpine
             arch: x64
             npm_config_arch: x64
+          - os: ubuntu-latest
+            platform: web
+            arch: unknown
           - os: macos-latest
             platform: darwin
             arch: x64
@@ -88,7 +91,7 @@ jobs:
         if: runner.os == 'Linux'
 
       - name: Package the extension
-        run: npx vsce package --target ${{ env.target }}
+        run: node dev/package.js --target ${{ env.target }}
       - uses: actions/upload-artifact@v2
         with:
           name: ${{ env.target }}

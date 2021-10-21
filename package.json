@@ -93,7 +93,6 @@
 		"compile": "webpack",
 		"watch": "webpack --watch",
 		"postinstall": "node dev/updateDosboxBin.js",
-		"prepackage": "node dev/updateVscodeIgnore.js",
 		"package": "webpack --mode production --devtool hidden-source-map",
 		"lint": "eslint src --ext ts",
 		"run-in-browser": "vscode-test-web --browserType=chromium --extensionDevelopmentPath=. ."
