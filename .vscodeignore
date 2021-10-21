@@ -12,6 +12,7 @@ webpack.config.js
 **/.eslintrc.json
 **/*.map
 **/*.ts
+**/.DS_store
 
 .github/
 
@@ -21,6 +22,10 @@ webpack.config.js
 
 web/
 !web/dist/index.js
-!web/res
+!web/res/empty.jsdos
 
 dev/
+
+emu/.git
+emu/**/.gitignore
+emu/**/*.md

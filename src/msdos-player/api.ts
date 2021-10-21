@@ -5,7 +5,7 @@ export class MsdosPlayer {
 
     start() {
         if (process.platform !== 'win32') {
-            throw new Error('msdos player can only run in win32 system')
+            throw new Error('msdos player can only run in win32 system');
         }
         const context = this.context;
 
@@ -14,8 +14,8 @@ export class MsdosPlayer {
             'cmd.exe',
             [
                 '/K',
-                context.asAbsolutePath('./emu/win/msdos_player/msdos.exe'),
-                context.asAbsolutePath('./emu/win/msdos_player/command.com')
+                context.asAbsolutePath('./emu/msdos_player/win/msdos.exe'),
+                context.asAbsolutePath('./emu/msdos_player/command.com')
             ]
 
         );

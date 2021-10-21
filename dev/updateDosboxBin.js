@@ -34,7 +34,7 @@ async function updateDosboxX(platform, arch) {
 
         for (const file of copyFileName) {
             const src = path.resolve(__dirname, '..', dstFolder, dosboxX[arch].location, file);
-            const dst = path.resolve(__dirname, '..', 'emu/win/dosbox_x/', file);
+            const dst = path.resolve(__dirname, '..', file === 'dosbox-x.exe' ? 'emu/dosbox_x/win' : 'emu/dosbox_x/', file);
             if (!fs.existsSync(src)) {
                 console.error('download Failed', src, fs.existsSync(src));
                 process.exit(1);

@@ -8,9 +8,9 @@ const fs = vscode.workspace.fs;
 export async function activate(context: vscode.ExtensionContext) {
 
 	const dosboxConfigurationFile = {
-		box: vscode.Uri.joinPath(context.extensionUri, 'emu/win/dosbox/dosbox-0.74.conf'),
-		boxX: vscode.Uri.joinPath(context.extensionUri, 'emu/win/dosbox_x/dosbox-x.reference.full.conf'),
-		boxXzh: vscode.Uri.joinPath(context.extensionUri, 'emu/win/dosbox_x_zh/dosbox-x.conf')
+		box: vscode.Uri.joinPath(context.extensionUri, 'emu/dosbox/dosbox-0.74.conf'),
+		boxX: vscode.Uri.joinPath(context.extensionUri, 'emu/dosbox_x/dosbox-x.reference.full.conf'),
+		boxXzh: vscode.Uri.joinPath(context.extensionUri, 'emu/dosbox_x/zh-CN/dosbox-x.conf')
 	};
 
 	const text = await fs.readFile(dosboxConfigurationFile.boxX);
@@ -18,8 +18,8 @@ export async function activate(context: vscode.ExtensionContext) {
 	conf.update('sdl', 'output', 'ttf');
 	conf.update('log', 'logfile', 'dosbox-x_zh.log');
 	conf.update('config', 'country', '86,936');
-	conf.update('ttf', 'font', context.asAbsolutePath('emu/win/dosbox_x_zh/simkai.ttf'));
-	conf.update('dosbox', 'language', context.asAbsolutePath('emu/win/dosbox_x_zh/zh_CN.lng'));
+	conf.update('ttf', 'font', context.asAbsolutePath('emu/dosbox_x/zh-CN/simkai.ttf'));
+	conf.update('dosbox', 'language', context.asAbsolutePath('emu/dosbox_x/zh-CN/zh_CN.lng'));
 	conf.update('dosbox', 'working directory option', 'noprompt');
 	const newText = new TextEncoder().encode(conf.toString());
 	await fs.writeFile(dosboxConfigurationFile.boxXzh, newText);
@@ -27,7 +27,7 @@ export async function activate(context: vscode.ExtensionContext) {
 	const _cmd: string | undefined = vscode.workspace.getConfiguration('vscode-dosbox').get('command.dosbox');
 	const cmd = _cmd ? _cmd : 'dosbox';
 	const confpath = vscode.Uri.joinPath(context.globalStorageUri, 'dosbox.conf');
-	const cwd = process.platform === 'win32' ? context.asAbsolutePath('emu/win/dosbox') : undefined;
+	const cwd = process.platform === 'win32' ? context.asAbsolutePath('emu/dosbox/win') : undefined;
 	const dosbox = new db.DOSBox(cmd, confpath, cwd);
 
 
@@ -36,7 +36,7 @@ export async function activate(context: vscode.ExtensionContext) {
 	const _xcmd: string | undefined = vscode.workspace.getConfiguration('vscode-dosbox').get('command.dosboxX');
 	const xcmd = _xcmd ? _xcmd : 'dosbox-x';
 	const xconfpath = vscode.Uri.joinPath(context.globalStorageUri, 'dosbox-x.conf');
-	const xcwd = process.platform === 'win32' ? context.asAbsolutePath('emu/win/dosbox_x') : undefined;
+	const xcwd = process.platform === 'win32' ? context.asAbsolutePath('emu/dosbox_x/win') : undefined;
 	const dosboxX = new db.DOSBox(xcmd, xconfpath, xcwd);
 
 	let confPath = dosboxConfigurationFile.boxX;
