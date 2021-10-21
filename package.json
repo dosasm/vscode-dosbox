@@ -79,21 +79,6 @@
 							"use zh_CN config",
 							"follow vscode's language config"
 						]
-					},
-					"vscode-dosbox.search.windows": {
-						"type": "array",
-						"markdownDescription": "The paths for search your dosbox(or dosbox-x) in windows",
-						"items": {
-							"type": "string"
-						},
-						"default": [
-							"C:\\Program Files\\",
-							"C:\\"
-						]
-					},
-					"vscode-dosbox.command.msdosShell.": {
-						"type": "string",
-						"markdownDescription": "The command for open your Terminal and attach msdos"
 					}
 				}
 			}
