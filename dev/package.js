@@ -35,7 +35,7 @@ main();
 
 async function main() {
     await fs.promises.writeFile('.vscodeignore', vscodeignore);
-    await vsce.createVSIX({ packagePath, useYarn: true });
+    await vsce.createVSIX({ target, useYarn: true });
     const files = await vsce.listFiles({ packageManager: vsce.PackageManager.Yarn });
     console.log(files);
     await fs.promises.writeFile('.vscodeignore', _vscodeignore);
