@@ -15,31 +15,37 @@ start creating package in platform:${process.platform},arch:${process.arch}
 target: ${packagePath}
 `, { target, platform, arch });
 
-const _vscodeignore = fs.readFileSync('.vscodeignore', { encoding: 'utf-8' });
-let vscodeignore = _vscodeignore;
-
-if (platform === 'win32') {
-
-}
-else if (platform === 'web') {
-    vscodeignore += '\nemu\ndist/extension.js\n';
-    vscodeignore.replace('!node_modules/emulators*/package.json', "");
-    vscodeignore.replace("!node_modules/emulators*/dist/*.*", "");
-}
-else if (platform === 'darwin') {
-    vscodeignore += '\nemu/**/win\n';
-}
-else {
-    vscodeignore += '\nemu/**/win\nemu/**/zh-CN/**\n';
-}
-
 main();
 
 async function main() {
-    await fs.promises.writeFile('.vscodeignore', vscodeignore);
-    await vsce.createVSIX({ target, useYarn: true });
+    const ignorePath = path.resolve(cwd, '.vscodeignore');
+    const _vscodeignore = await fs.promises.readFile(ignorePath, { encoding: 'utf-8' });
+
+    let vscodeignore = _vscodeignore;
+
+    if (platform === 'win32') {
+
+    }
+    else if (platform === 'web') {
+        vscodeignore = vscodeignore
+            .replace("!node_modules/emulators*/package.json", "")
+            .replace("!node_modules/emulators*/dist/*.*", "");
+
+        vscodeignore += '\nemu\ndist/extension.js\n';
+    }
+    else if (platform === 'darwin') {
+        vscodeignore += '\nemu/**/win\n';
+    }
+    else {
+        vscodeignore += '\nemu/**/win\nemu/**/zh-CN/**\n';
+    }
+    await fs.promises.writeFile(ignorePath, vscodeignore);
+
     const files = await vsce.listFiles({ packageManager: vsce.PackageManager.Yarn });
     console.log(files);
-    await fs.promises.writeFile('.vscodeignore', _vscodeignore);
+
+    await vsce.createVSIX({ target, useYarn: true });
+
+    await fs.promises.writeFile(ignorePath, _vscodeignore);
 }
 
