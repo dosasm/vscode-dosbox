@@ -1,14 +1,11 @@
 {
-    "compilerOptions": {
-        "outDir": "out/",
-        "rootDir": "src/",
-        "lib": [
-            "es2015",
-            "dom",
-        ],
-        "moduleResolution": "node",
-        "strict": true,
-        "target": "es2015",
-        "sourceMap": true
-    },
+  "compilerOptions": {
+    "outDir": "out/",
+    "rootDir": "src/",
+    "lib": ["dom"],
+    "moduleResolution": "node",
+    "strict": true,
+    "target": "es2017",
+    "sourceMap": true
+  }
 }
