@@ -23,6 +23,8 @@ if (platform === 'win32') {
 }
 else if (platform === 'web') {
     vscodeignore += '\nemu\ndist/extension.js\n';
+    vscodeignore.replace('!node_modules/emulators*/package.json', "");
+    vscodeignore.replace("!node_modules/emulators*/dist/*.*", "");
 }
 else if (platform === 'darwin') {
     vscodeignore += '\nemu/**/win\n';

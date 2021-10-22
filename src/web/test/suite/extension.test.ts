@@ -13,7 +13,8 @@ suite('Web Extension Test Suite', () => {
 		assert.strictEqual(-1, [1, 2, 3].indexOf(0));
 	});
 
-	test('test jsdos Web API', async () => {
+	test('test jsdos Web API', async function () {
+		this.timeout('99999999');
 		const extension = vscode.extensions.getExtension('xsro.vscode-dosbox');
 		let api: myExtension.API | undefined = await extension?.activate();
 		if (api === undefined) {

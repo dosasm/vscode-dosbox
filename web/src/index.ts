@@ -35,6 +35,11 @@ async function main(): Promise<void> {
 
 main();
 
+log('index.js loaded');
+postMessage({
+    command: 'loaded'
+});
+
 // Handle the message inside the webview
 window.addEventListener('message', async event => {
 
@@ -42,14 +47,28 @@ window.addEventListener('message', async event => {
 
     switch (message.command) {
         case 'start':
+            log('bundle Array received');
             const bundle: Uint8Array = message.bundle;
             const layers = emulatorsUi.dom.layers(ele as HTMLDivElement);
             const ci = await emulators.dosboxDirect(bundle);
             postCi.setCi(ci);
+            log("", false);
             layers.hideLoadingLayer();
             emulatorsUi.graphics.webGl(layers, ci);
             emulatorsUi.controls.keyboard(layers, ci);
             break;
     }
 });
+
+function log(msg: string, add: boolean = true) {
+    const e = document.getElementById('loadingInfo');
+    if (e?.innerHTML) {
+        if (add) {
+            e.innerHTML += ';' + msg;
+        }
+        else {
+            e.innerHTML = msg;
+        }
+    }
+}
 

@@ -31,6 +31,19 @@ export class JsdosWeb {
             return panel.webview.asWebviewUri(fullpath);
         };
 
+        const jsdosScript = (process as any).browser ?
+            {
+                emu: "https://js-dos.com/v7/build/releases/latest/emulators/emulators.js",
+                emuDist: "https://js-dos.com/v7/build/releases/latest/js-dos/",
+                ui: "https://js-dos.com/v7/build/releases/latest/emulators-ui/emulators-ui.js",
+                uiCss: "https://js-dos.com/v7/build/releases/latest/emulators-ui/emulators-ui.css"
+            } : {
+                emu: asWeb("/node_modules/emulators/dist/emulators.js"),
+                emuDist: asWeb("/node_modules/emulators/dist/"),
+                ui: asWeb("/node_modules/emulators-ui/dist/emulators-ui.js"),
+                uiCss: asWeb("/node_modules/emulators-ui/dist/emulators-ui.css")
+            };
+
         panel.webview.html = `
 <!DOCTYPE html>
 <html lang="en">
@@ -47,42 +60,59 @@ export class JsdosWeb {
             padding: 0;
         }
     </style>
-    <script src="${asWeb("/node_modules/emulators/dist/emulators.js")}"></script>
-    <script src="${asWeb("/node_modules/emulators-ui/dist/emulators-ui.js")}"></script>
-    <link rel="stylesheet" href="${asWeb("/node_modules/emulators-ui/dist/emulators-ui.css")}">
+    <script src="${jsdosScript.emu}"></script>
+    <script src="${jsdosScript.ui}"></script>
+    <link rel="stylesheet" href="${jsdosScript.uiCss}">
 </head>
     
 <body>
     <div class="layout">
-        <div id="root" style="width: 100%; height: 100%;"></div>
+        <div id="root" style="width: 100%; height: 100%;">
+        <p id='loadingInfo'>loading</p>
+        </div>
     </div>
     <script>
-        emulators.pathPrefix = "${asWeb("/node_modules/emulators/dist/")}";
+        emulators.pathPrefix = "${jsdosScript.emuDist}";
         bundlePath=undefined
     </script>
     <script src='${asWeb("web/dist/index.js")}'></script>
 </body>
 </html>`;
 
-        if (Array.isArray(bundle)) {
-            panel.webview.postMessage({
-                command: 'start',
-                bundle
-            });
-        }
+        async function getBundle(bundle?: Uint8Array | vscode.Uri) {
+            if (Array.isArray(bundle)) {
+                return bundle;
+            }
+            else {
+                try {
+                    const data = await fs.readFile(bundle as vscode.Uri);
+                    return data;
+                } catch (e) {
 
-        if (bundle === undefined) {
+                }
+            }
             const zip = new JSZip();
             zip.file('.jsdos/dosbox.conf', "");
-            zip.generateAsync({ type: "uint8array" }).then(
-                bundle => {
-                    panel.webview.postMessage({
-                        command: 'start',
-                        bundle
-                    });
-                }
-            );
+            return zip.generateAsync({ type: "uint8array" });
         }
+
+        // Handle messages from the webview
+        panel.webview.onDidReceiveMessage(
+            message => {
+                switch (message.command) {
+                    case 'loaded':
+                        getBundle(bundle).then(
+                            data => panel.webview.postMessage({
+                                command: 'start',
+                                bundle: data
+                            })
+                        );
+                        return;
+                }
+            },
+            undefined,
+            context.subscriptions
+        );
 
         return panel.webview;
     }
