@@ -22,7 +22,6 @@ webpack.config.js
 
 web/
 !web/dist/index.js
-!web/res/empty.jsdos
 
 dev/
 

@@ -2242,7 +2242,7 @@ json-stable-stringify-without-jsonify@^1.0.1:
 
 jszip@^3.7.1:
   version "3.7.1"
-  resolved "https://registry.nlark.com/jszip/download/jszip-3.7.1.tgz"
+  resolved "https://registry.nlark.com/jszip/download/jszip-3.7.1.tgz#bd63401221c15625a1228c556ca8a68da6fda3d9"
   integrity sha1-vWNAEiHBViWhIoxVbKimjab9o9k=
   dependencies:
     lie "~3.3.0"

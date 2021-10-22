@@ -11,7 +11,11 @@ async function jsdos(bundle?: vscode.Uri) {
         const bundleData = bundle ?
             await fs.readFile(bundle)
             : await (await createBundle()).generateAsync({ type: "uint8array" });
-        const ci = await emulators.dosboxDirect(bundleData);
+
+        const ci = (process as any).browser ?
+            await emulators.dosboxDirect(bundleData)
+            : await emulators.dosboxDirect(bundleData);
+
         return ci;
     }
     else {

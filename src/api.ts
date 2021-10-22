@@ -17,7 +17,7 @@ export interface API {
      * 
      * **Note**: the process will be lost when hide the webview and currently no way to resume
      */
-    jsdosWeb: (bundle: vscode.Uri) => vscode.Webview;
+    jsdosWeb: (bundle: Uint8Array | undefined) => vscode.Webview;
     /**
      * run jsdos in the VSCode's node environment
      * 

@@ -1,11 +1,15 @@
+import JSZip = require('jszip');
 import * as vscode from 'vscode';
+
+const fs = vscode.workspace.fs;
 
 export class JsdosWeb {
     constructor(
         private context: vscode.ExtensionContext
     ) { }
 
-    start(bundle: vscode.Uri) {
+    jsdosWeb = this.start;
+    start(bundle?: Uint8Array | vscode.Uri) {
         const context = this.context;
 
         const panel = vscode.window.createWebviewPanel(
@@ -19,7 +23,6 @@ export class JsdosWeb {
                     vscode.Uri.joinPath(context.extensionUri, 'node_modules/emulators/dist'),
                     vscode.Uri.joinPath(context.extensionUri, 'node_modules/emulators-ui/dist'),
                     vscode.Uri.joinPath(context.extensionUri, 'web/dist'),
-                    vscode.Uri.joinPath(bundle, '..')
                 ]
             }
         );
@@ -27,6 +30,7 @@ export class JsdosWeb {
             const fullpath = vscode.Uri.joinPath(context.extensionUri, str);
             return panel.webview.asWebviewUri(fullpath);
         };
+
         panel.webview.html = `
 <!DOCTYPE html>
 <html lang="en">
@@ -54,11 +58,32 @@ export class JsdosWeb {
     </div>
     <script>
         emulators.pathPrefix = "${asWeb("/node_modules/emulators/dist/")}";
-        bundlePath="${panel.webview.asWebviewUri(bundle)}"
+        bundlePath=undefined
     </script>
     <script src='${asWeb("web/dist/index.js")}'></script>
 </body>
 </html>`;
+
+        if (Array.isArray(bundle)) {
+            panel.webview.postMessage({
+                command: 'start',
+                bundle
+            });
+        }
+
+        if (bundle === undefined) {
+            const zip = new JSZip();
+            zip.file('.jsdos/dosbox.conf', "");
+            zip.generateAsync({ type: "uint8array" }).then(
+                bundle => {
+                    panel.webview.postMessage({
+                        command: 'start',
+                        bundle
+                    });
+                }
+            );
+        }
+
         return panel.webview;
     }
 }

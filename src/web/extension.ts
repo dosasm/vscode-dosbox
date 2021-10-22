@@ -11,8 +11,12 @@ export function activate(context: vscode.ExtensionContext) {
 	// This line of code will only be executed once when your extension is activated
 	console.log('Congratulations, your extension "test-web" is now active in the web extension host!');
 
-	return jsdosWeb.activate(context);
+	return {
+		...jsdosWeb.activate(context),
+	};
 }
+
+export type API = ReturnType<typeof activate>;
 
 // this method is called when your extension is deactivated
 export function deactivate() { }
