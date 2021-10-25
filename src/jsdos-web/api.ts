@@ -12,10 +12,11 @@ export class JsdosWeb {
     start(bundle?: Uint8Array | vscode.Uri) {
         const context = this.context;
 
+        const viewColumn: vscode.ViewColumn | undefined = vscode.workspace.getConfiguration('vscode-dosbox').get('jsdosWeb.viewColumn');
         const panel = vscode.window.createWebviewPanel(
             "jsdos pannel",
             'jsdos' + new Date().toLocaleTimeString(),
-            vscode.ViewColumn.One,
+            viewColumn ?? vscode.ViewColumn.Beside,
             {
                 enableScripts: true,
                 //hint: the below settings should be folder's uri
