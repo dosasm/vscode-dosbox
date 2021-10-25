@@ -19,6 +19,7 @@ export class JsdosWeb {
             viewColumn ?? vscode.ViewColumn.Beside,
             {
                 enableScripts: true,
+                retainContextWhenHidden: true,
                 //hint: the below settings should be folder's uri
                 localResourceRoots: [
                     vscode.Uri.joinPath(context.extensionUri, 'node_modules/emulators/dist'),

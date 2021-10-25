@@ -3,14 +3,9 @@ import * as vscode from 'vscode';
 import { logger } from '../util/logger';
 import { Conf } from './conf';
 import * as api from '../api';
+import { DosboxResult } from '../api';
 
 const fs = vscode.workspace.fs;
-
-export interface DosboxResult {
-    stdout: string,
-    stderr: string,
-    exitCode: number | null;
-}
 
 export class DOSBox implements api.Dosbox {
     private _conf: Conf = new Conf("");

@@ -1,6 +1,12 @@
 import { CommandInterface, Emulators } from 'emulators';
 import * as vscode from 'vscode';
-import { DosboxResult } from './dosbox/dosbox';
+import * as Jszip from 'jszip';
+
+export interface DosboxResult {
+    stdout: string,
+    stderr: string,
+    exitCode: number | null;
+}
 
 export interface Dosbox {
     updateConf(section: string, key: string, value: string | number | boolean): boolean,
@@ -12,22 +18,32 @@ export interface API {
     /**
      * run **jsdos in the webview**. This works in all platform including web
      * 
-     * @param bundle the Uri of the jsdos bundle
-     * @returns the webview running JSDos
-     * 
-     * **Note**: the process will be lost when hide the webview and currently no way to resume
+     * @param bundle the Uint8Array data of the jsdos bundle
+     * @returns the vscode webview running JSDos
      */
     jsdosWeb: (bundle: Uint8Array | undefined) => vscode.Webview;
     /**
      * run jsdos in the VSCode's node environment
      * 
+     * @param bundle the Uint8Array data of the jsdos bundle
+     * @todo make this also work in web extension
      * @returns [CommandInterface](https://js-dos.com/v7/build/docs/command-interface)
      */
-    jsdos: (bundle?: vscode.Uri | undefined) => Promise<CommandInterface>;
+    jsdos: (bundle?: Uint8Array | undefined) => Promise<CommandInterface>;
+
     /**
-     * the jsdos emulator class of https://github.com/js-dos/emulators
+     * [jsdos](https://js-dos.com/v7/build/) emulator 
+     *  is the core of jsdos -- the simpliest API to run DOS games in browser
+     * 
+     * @see https://github.com/js-dos/emulators
      */
     emulators: Emulators;
+    /**
+     * [JSZip](https://stuk.github.io/jszip/)
+     *  is a javascript library for creating, reading and editing .zip files, with a lovely and simple API.
+     */
+    jszip: typeof Jszip;
+
     /**
      * run DOSBox via child_process
      */
@@ -43,4 +59,5 @@ export interface API {
      * @returns a terminal to control
      */
     msdosPlayer: () => vscode.Terminal;
+
 }
