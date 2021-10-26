@@ -1,3 +1,8 @@
+/**
+ * API from extension [vscode-dosbox](https://marketplace.visualstudio.com/items?itemName=xsro.vscode-dosbox)
+ * originally from https://github.com/dosasm/vscode-dosbox/blob/main/src/api.ts
+ */
+
 import { CommandInterface, Emulators } from 'emulators';
 import * as vscode from 'vscode';
 

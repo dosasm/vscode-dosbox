@@ -14,9 +14,12 @@ export async function fromBundle(bundle: Uint8Array, tempFolder: vscode.Uri): Pr
     const zip = new Jszip();
     await zip.loadAsync(bundle);
     Object.keys(zip.files).forEach(async function (filename) {
-        const data = await zip.files[filename].async("uint8array");
+        const e = zip.files[filename];
+        const data = await e.async("uint8array");
         const dest = vscode.Uri.joinPath(tempFolder, filename);
-        await fs.writeFile(dest, data);
+        if (e.dir === false) {
+            await fs.writeFile(dest, data);
+        }
     });
     const filename = ".jsdos/dosbox.conf";
     if (zip.file(filename)) {
