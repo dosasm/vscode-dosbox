@@ -18,6 +18,9 @@ let api: myExtension.API | undefined = undefined;
 suite('test DOSBox-like API', function () {
 
     this.beforeEach(async function () {
+        if (process.platform === 'linux') {
+            vscode.workspace.getConfiguration('vscode-dosbox').update("command.dosboxX", "flatpak run com.dosbox_x.DOSBox-X", vscode.ConfigurationTarget.Global);
+        }
         const extension = vscode.extensions.getExtension('xsro.vscode-dosbox');
         api = await extension?.activate();
         assert.ok(api !== undefined, api ? Object.keys(api).toString() : "api can't get");
@@ -41,9 +44,7 @@ suite('test DOSBox-like API', function () {
     });
 
     test('test dosbox-x API', async function () {
-        if (process.platform === 'linux') {
-            this.skip();
-        }
+
 
         if (api) {
             const data = Math.random().toString();

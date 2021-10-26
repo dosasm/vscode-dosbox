@@ -7,6 +7,46 @@ on:
       - "v*"
 
 jobs:
+  test:
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest, windows-latest]
+      # fail-fast: false
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "14"
+      - name: install dependencies with yarn
+        run: yarn
+
+      - name: linux Install dosbox and dosbox-x tool
+        run: |
+          sudo apt-get update
+          sudo apt-get install dosbox
+          sudo apt install flatpak
+          sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+          sudo flatpak install flathub com.dosbox_x.DOSBox-X -y
+        if: runner.os == 'Linux'
+      - name: macOS Install dosbox and dosbox-x tool
+        run: |
+          brew update
+          brew install dosbox
+          brew install dosbox-x
+        if: runner.os == 'macOS'
+
+      - run: |
+          yarn test
+          yarn test-local
+        if: runner.os != 'Linux' && matrix.arch != 'arm64'
+      - run: |
+          xvfb-run -a yarn test
+          xvfb-run -a yarn test-local
+        if: runner.os == 'Linux'
   build:
     strategy:
       matrix:
@@ -51,6 +91,8 @@ jobs:
             arch: arm64
             npm_config_arch: arm64
     runs-on: ${{ matrix.os }}
+    needs: test
+    if: success()
     steps:
       - uses: actions/checkout@v2
         with:
@@ -66,29 +108,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           npm_config_arch: ${{ matrix.npm_config_arch }}
-
-      - name: linux Install dosbox and dosbox-x tool
-        run: |
-          sudo apt-get update
-          sudo apt-get install dosbox
-        if: runner.os == 'Linux'
-      - name: macOS Install dosbox and dosbox-x tool
-        run: |
-          brew update
-          brew install dosbox
-          brew install dosbox-x
-        if: runner.os == 'macOS'
-
-      - name: compile and test
-        run: yarn compile
-      - run: |
-          yarn test-local
-          yarn test
-        if: runner.os != 'Linux' && matrix.arch != 'arm64'
-      - run: |
-          xvfb-run -a yarn test-local
-          xvfb-run -a yarn test
-        if: runner.os == 'Linux'
 
       - name: Package the extension
         run: node dev/package.js --target ${{ env.target }}
