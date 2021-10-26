@@ -19,7 +19,7 @@ suite('test DOSBox-like API', () => {
         const extension = vscode.extensions.getExtension('xsro.vscode-dosbox');
         let api: myExtension.API | undefined = await extension?.activate();
 
-        assert.ok(api !== undefined, JSON.stringify(api));
+        assert.ok(api !== undefined, api ? Object.keys(api).toString() : "api can't get");
 
         if (api) {
             const data = Math.random().toString();
@@ -44,7 +44,7 @@ suite('test DOSBox-like API', () => {
         const extension = vscode.extensions.getExtension('xsro.vscode-dosbox');
         let api: myExtension.API | undefined = await extension?.activate();
 
-        assert.ok(api !== undefined, JSON.stringify(api));
+        assert.ok(api !== undefined, api ? Object.keys(api).toString() : "api can't get");
 
         if (api) {
             const data = Math.random().toString();

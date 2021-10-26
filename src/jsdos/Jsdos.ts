@@ -44,13 +44,19 @@ export class Jsdos implements api.Jsdos {
     }
 
     run = this.runInHost;
-    async runInHost(): Promise<CommandInterface> {
+
+    async getBundleData(): Promise<Uint8Array> {
+        const s = this.jszip.file('.jsdos/dosbox.conf', this.conf.toString());
         const bundleData = await this.jszip.generateAsync({ type: 'uint8array' });
+        return bundleData;
+    }
+    async runInHost(): Promise<CommandInterface> {
+        const bundleData = await this.getBundleData();
         return emulators.dosboxDirect(bundleData);
     }
 
     async runInWebview(): Promise<vscode.Webview> {
-        const bundleData = await this.jszip.generateAsync({ type: 'uint8array' });
+        const bundleData = await this.getBundleData();
         return runInWebview(this.context, bundleData);
     };
 }

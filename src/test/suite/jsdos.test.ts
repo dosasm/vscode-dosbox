@@ -14,7 +14,7 @@ suite('test jsdos API', () => {
             api = extension?.exports;
         }
 
-        assert.ok(api !== undefined, JSON.stringify(api));
+        assert.ok(api !== undefined, api ? Object.keys(api).toString() : "api can't get");
         if (api) {
             const ci = await api.jsdos.runInHost();
             assert.ok(typeof ci.width() === 'number');

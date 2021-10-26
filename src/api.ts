@@ -46,6 +46,10 @@ export interface API {
      * @see https://github.com/js-dos/emulators
      */
     emulators: Emulators;
+
+    /**
+     * run Jsdos in ExtensionHost or Webview
+     */
     jsdos: Jsdos;
 
     /**
