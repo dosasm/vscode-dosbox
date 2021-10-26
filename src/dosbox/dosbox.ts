@@ -4,6 +4,7 @@ import { logger } from '../util/logger';
 import { Conf } from './conf';
 import * as api from '../api';
 import { DosboxResult } from '../api';
+import { fromBundle } from './fromBundle';
 
 const fs = vscode.workspace.fs;
 
@@ -52,5 +53,10 @@ export class DOSBox implements api.Dosbox {
                     cpHandler(p);
                 }
             });
+    }
+
+    async fromBundle(bundle: Uint8Array, tempFolder: vscode.Uri): Promise<void> {
+        const confText = await fromBundle(bundle, tempFolder);
+        this._conf = new Conf(confText);
     }
 }

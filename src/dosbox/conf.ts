@@ -4,7 +4,7 @@
 export class Conf {
     private _target: string[] = [];
     private eol = '\n';
-    constructor(confStr: string) {
+    constructor(confStr: string = "") {
         if (confStr.includes('\r\n')) {
             this.eol = '\r\n';
         }
