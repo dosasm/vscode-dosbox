@@ -3,7 +3,7 @@ import * as dosbox from './dosbox/main';
 import * as player from './msdos-player/main';
 import * as jsdos from './jsdos/main';
 import * as jsdosWeb from './jsdos-web/main';
-import * as jszip from 'jszip';
+import { emulators } from './jsdos/runInHost';
 export { API } from './api';
 import * as D from './api';
 
@@ -15,7 +15,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<D.API>
 		...player.activate(context),
 		...jsdos.activate(context),
 		...jsdosWeb.activate(context),
-		jszip
+		emulators
 	};
 
 	return api;

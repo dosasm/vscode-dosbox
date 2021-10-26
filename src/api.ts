@@ -1,6 +1,5 @@
 import { CommandInterface, Emulators } from 'emulators';
 import * as vscode from 'vscode';
-import * as Jszip from 'jszip';
 
 export interface DosboxResult {
     stdout: string,
@@ -14,23 +13,32 @@ export interface Dosbox {
     run(params?: string[]): Promise<DosboxResult>
 }
 
-export interface API {
+export interface Jsdos {
+    /**
+     * set the jsdos bundle to use
+     * @param bundle the Uint8Array data of the jsdos bundle or its Uri
+     * @param updateConf use the conf file in the bundle
+     */
+    setBundle(bundle: vscode.Uri | Uint8Array, updateConf?: boolean): void,
+    updateConf(section: string, key: string, value: string | number | boolean): boolean,
+    updateAutoexec(context: string[]): void,
+    /**
+     * run jsdos in the VSCode's extension Host
+     * 
+     * @todo make this also work in web extension
+     * @returns [CommandInterface](https://js-dos.com/v7/build/docs/command-interface)
+     */
+    runInHost(): Promise<CommandInterface>,
     /**
      * run **jsdos in the webview**. This works in all platform including web
      * 
      * @param bundle the Uint8Array data of the jsdos bundle
      * @returns the vscode webview running JSDos
      */
-    jsdosWeb: (bundle: Uint8Array | undefined) => vscode.Webview;
-    /**
-     * run jsdos in the VSCode's node environment
-     * 
-     * @param bundle the Uint8Array data of the jsdos bundle
-     * @todo make this also work in web extension
-     * @returns [CommandInterface](https://js-dos.com/v7/build/docs/command-interface)
-     */
-    jsdos: (bundle?: Uint8Array | undefined) => Promise<CommandInterface>;
+    runInWebview(): Promise<vscode.Webview>,
+}
 
+export interface API {
     /**
      * [jsdos](https://js-dos.com/v7/build/) emulator 
      *  is the core of jsdos -- the simpliest API to run DOS games in browser
@@ -38,11 +46,7 @@ export interface API {
      * @see https://github.com/js-dos/emulators
      */
     emulators: Emulators;
-    /**
-     * [JSZip](https://stuk.github.io/jszip/)
-     *  is a javascript library for creating, reading and editing .zip files, with a lovely and simple API.
-     */
-    jszip: typeof Jszip;
+    jsdos: Jsdos;
 
     /**
      * run DOSBox via child_process

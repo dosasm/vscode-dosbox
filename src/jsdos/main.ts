@@ -1,16 +1,17 @@
 import * as vscode from 'vscode';
-import { api } from './api';
-
-const fs = vscode.workspace.fs;
+import { Jsdos } from './Jsdos';
 
 export function activate(context: vscode.ExtensionContext) {
-    api.emulators.pathPrefix = context.asAbsolutePath('/node_modules/emulators/dist/');
 
-    let disposable = vscode.commands.registerCommand('dosbox.startJsdos', async (bundle?: vscode.Uri) => {
-        const bundleData = bundle ? await fs.readFile(bundle) : undefined;
-        api.jsdos(bundleData);
+    const jsdos = new Jsdos(context);
+
+    let disposable = vscode.commands.registerCommand('dosbox.startJsdos', async (bundle: vscode.Uri) => {
+        jsdos.setBundle(bundle);
+        jsdos.runInHost();
     });
     context.subscriptions.push(disposable);
 
-    return api;
+    return {
+        jsdos
+    };
 }

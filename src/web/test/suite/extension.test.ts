@@ -23,7 +23,7 @@ suite('Web Extension Test Suite', () => {
 
 		assert.ok(api !== undefined, JSON.stringify(api));
 		if (api) {
-			const webview = api.jsdosWeb(undefined);
+			const webview = await api.jsdos.runInWebview();
 
 			const stdouts = await new Promise<string[]>((resolve, reject) => {
 				const stdouts: string[] = [];

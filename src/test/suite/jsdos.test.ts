@@ -16,22 +16,10 @@ suite('test jsdos API', () => {
 
         assert.ok(api !== undefined, JSON.stringify(api));
         if (api) {
-            const ci = await api.jsdos();
+            const ci = await api.jsdos.runInHost();
             assert.ok(typeof ci.width() === 'number');
             ci.exit();
-        }
-    });
-
-    test('test jsdos Web API', async () => {
-        const extension = vscode.extensions.getExtension('xsro.vscode-dosbox');
-        let api: myExtension.API | undefined = await extension?.activate();
-        if (api === undefined) {
-            api = extension?.exports;
-        }
-
-        assert.ok(api !== undefined, JSON.stringify(api));
-        if (api) {
-            const webview = api.jsdosWeb(undefined);
+            const webview = await api.jsdos.runInWebview();
 
             const stdouts = await new Promise<string[]>((resolve, reject) => {
                 const stdouts: string[] = [];
