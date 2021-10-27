@@ -19,6 +19,7 @@ let api: myExtension.API | undefined = undefined;
 suite('test DOSBox-like API', function () {
 
     this.beforeEach(async function () {
+        //dosbox-X should install via flatpak so update configuration
         if (process.platform === 'linux') {
             vscode.workspace.getConfiguration('vscode-dosbox').update("command.dosboxX", "flatpak run com.dosbox_x.DOSBox-X -silent -nogui", vscode.ConfigurationTarget.Global);
         }
