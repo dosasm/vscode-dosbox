@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import * as db from './dosbox';
 import * as cp from 'child_process';
 import { Conf } from './conf';
+import { logger } from '../util/logger';
 
 const fs = vscode.workspace.fs;
 
@@ -46,6 +47,9 @@ export async function activate(context: vscode.ExtensionContext) {
 		case 'zh-cn': confPath = dosboxConfigurationFile.boxXzh;
 	}
 	await dosboxX.setConf(confPath);
+	const dosboxXlog = vscode.Uri.joinPath(context.logUri, 'dosbox-x.log');
+	dosboxX.updateConf('log', 'logfile', dosboxXlog.fsPath);
+	logger.channel('dosbox-x log at: ' + dosboxXlog.fsPath + '\n');
 
 	let disposable1 = vscode.commands.registerCommand('dosbox.openDosbox', (params?: string[], cpHandler?: (p: cp.ChildProcess) => void) => {
 		return dosbox.run(params, cpHandler);
