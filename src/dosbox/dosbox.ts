@@ -43,7 +43,7 @@ export class DOSBox implements api.Dosbox {
                     if (error) {
                         logger.error(error);
                         vscode.window.showErrorMessage("can't open dosbox with command: " + command);
-                        //reject(error);
+                        reject(error);
                     }
                     else {
                         resolve({ stdout, stderr, exitCode: p.exitCode });

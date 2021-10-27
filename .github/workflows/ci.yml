@@ -40,13 +40,16 @@ jobs:
         if: runner.os == 'macOS'
 
       - run: |
+          /usr/bin/Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+          echo ">>> Started xvfb"
+        if: runner.os == 'Linux'
+
+      - run: |
           yarn test
           yarn test-local
-        if: runner.os != 'Linux' && matrix.arch != 'arm64'
-      - run: |
-          xvfb-run -a yarn test
-          xvfb-run -a yarn test-local
-        if: runner.os == 'Linux'
+        env:
+          DISPLAY: ":99.0"
+
   build:
     strategy:
       matrix:

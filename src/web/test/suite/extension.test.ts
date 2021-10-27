@@ -21,7 +21,7 @@ suite('Web Extension Test Suite', () => {
 			api = extension?.exports;
 		}
 
-		assert.ok(api !== undefined, JSON.stringify(api));
+		assert.ok(api !== undefined);
 		if (api) {
 			const webview = await api.jsdos.runInWebview();
 

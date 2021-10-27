@@ -9,7 +9,8 @@ import * as os from 'os';
 import * as path from 'path';
 import * as fs from 'fs';
 
-const testDir = path.join(os.tmpdir(), 'vscode-dosbox-test');
+const testFolderName = Math.floor(Math.random() * 10 ** 10).toString();
+const testDir = path.join(os.tmpdir(), testFolderName);
 fs.mkdirSync(testDir, { recursive: true });
 console.log(`use ${testDir} as test dir`);
 
@@ -19,7 +20,7 @@ suite('test DOSBox-like API', function () {
 
     this.beforeEach(async function () {
         if (process.platform === 'linux') {
-            vscode.workspace.getConfiguration('vscode-dosbox').update("command.dosboxX", "flatpak run com.dosbox_x.DOSBox-X", vscode.ConfigurationTarget.Global);
+            vscode.workspace.getConfiguration('vscode-dosbox').update("command.dosboxX", "flatpak run com.dosbox_x.DOSBox-X -silent -nogui", vscode.ConfigurationTarget.Global);
         }
         const extension = vscode.extensions.getExtension('xsro.vscode-dosbox');
         api = await extension?.activate();
@@ -44,19 +45,25 @@ suite('test DOSBox-like API', function () {
     });
 
     test('test dosbox-x API', async function () {
-
-
+        //according to https://github.com/flathub/com.dosbox.DOSBox#limitations
+        //For security reasons, this Flatpak is sandboxed and only has access to the user's Documents folder. 
+        let testDir2 = testDir;
+        if (process.platform === 'linux') {
+            testDir2 = __dirname;
+            console.log('make and use ' + testDir2);
+        }
         if (api) {
             const data = Math.random().toString();
             const fileName = 'DOSBOXX.TXT';
             api.dosboxX.updateAutoexec([
-                `mount c ${testDir}`,
+                `mount c ${testDir2}`,
                 'c:',
                 `echo ${data} > ${fileName}`,
                 'exit']);
-            await api.dosboxX.run();
-            const testFile = path.join(testDir, fileName);
-            assert.ok(fs.existsSync(testFile));
+            const r = await api.dosboxX.run();
+            const testFile = path.join(testDir2, fileName);
+            console.log(JSON.stringify(r));
+            assert.ok(fs.existsSync(testFile), fs.readdirSync(testDir2, { encoding: 'utf-8' }).join("\n"));
             const data2 = fs.readFileSync(testFile, { encoding: 'utf-8' });
             assert.equal(data, data2.trim());
         }
