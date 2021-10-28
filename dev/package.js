@@ -24,20 +24,50 @@ async function main() {
     let vscodeignore = _vscodeignore;
 
     if (platform === 'win32') {
+        if (arch === 'ia32') {
+            vscodeignore += `
+        emu/dosbox_x
+        emu/msdos_player
+        !emu/dosbox_x/win32-ia32
+        !emu/msdos_player/win32-ia32
+        `;
+        }
 
+        if (arch === 'x64') {
+            vscodeignore += `
+            emu/dosbox_x
+            emu/msdos_player
+            !emu/dosbox_x/win32-x64
+            !emu/msdos_player/win32-ia32
+            `;
+        }
+
+        if (arch === 'arm64') {
+            vscodeignore += `
+            emu/dosbox_x
+            emu/msdos_player
+            !emu/dosbox_x/win32-arm64
+            `;
+        }
     }
     else if (platform === 'web') {
         vscodeignore = vscodeignore
             .replace("!node_modules/emulators*/package.json", "")
             .replace("!node_modules/emulators*/dist/*.*", "");
 
-        vscodeignore += '\nemu\ndist/extension.js\n';
+        vscodeignore += `
+        emu
+        dist/extension.js`;
     }
     else if (platform === 'darwin') {
-        vscodeignore += '\nemu/**/win\n';
+        vscodeignore += `
+        emu/**/win*/
+        `;
     }
     else {
-        vscodeignore += '\nemu/**/win\nemu/**/zh-CN/**\n';
+        vscodeignore += `
+        emu/**/win*/
+        emu/**/zh-CN/**`;
     }
     await fs.promises.writeFile(ignorePath, vscodeignore);
 

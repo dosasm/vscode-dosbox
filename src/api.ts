@@ -4,6 +4,7 @@
  */
 
 import { CommandInterface, Emulators } from 'emulators';
+import * as Jszip from 'jszip';
 import * as vscode from 'vscode';
 
 export interface DosboxResult {
@@ -39,10 +40,19 @@ export interface Dosbox {
 export interface Jsdos {
     /**
      * set the jsdos bundle to use
+     * 
+     * @deprecated use jszip
      * @param bundle the Uint8Array data of the jsdos bundle or its Uri
      * @param updateConf use the conf file in the bundle
      */
     setBundle(bundle: vscode.Uri | Uint8Array, updateConf?: boolean): void,
+    /**
+     * the [jszip object](https://stuk.github.io/jszip/)
+     * 
+     * change this to change the bundle's data, 
+     * the extension call it to generate bundle data
+     */
+    jszip: Jszip;
     updateConf(section: string, key: string, value: string | number | boolean): boolean,
     updateAutoexec(context: string[]): void,
     /**

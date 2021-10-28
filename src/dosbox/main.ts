@@ -37,7 +37,7 @@ export async function activate(context: vscode.ExtensionContext) {
 	const _xcmd: string | undefined = vscode.workspace.getConfiguration('vscode-dosbox').get('command.dosboxX');
 	const xcmd = _xcmd ? _xcmd : 'dosbox-x';
 	const xconfpath = vscode.Uri.joinPath(context.globalStorageUri, 'dosbox-x.conf');
-	const xcwd = process.platform === 'win32' ? context.asAbsolutePath('emu/dosbox_x/win') : undefined;
+	const xcwd = process.platform === 'win32' ? context.asAbsolutePath('emu/dosbox_x/' + process.platform + '-' + process.arch) : undefined;
 	const dosboxX = new db.DOSBox(xcmd, xconfpath, xcwd);
 
 	let confPath = dosboxConfigurationFile.boxX;
