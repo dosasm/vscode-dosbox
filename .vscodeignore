@@ -25,6 +25,7 @@ web/
 
 dev/
 
-emu/.git
-emu/**/.gitignore
-emu/**/*.md
+emu
+!emu/dosbox
+!emu/dosbox_x
+!emu/msdos_player

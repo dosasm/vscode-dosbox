@@ -1,8 +1,8 @@
 import * as vscode from 'vscode';
 
 export function activate(context: vscode.ExtensionContext) {
-
-    const msdosPath = context.asAbsolutePath(`./emu/msdos_player/win32-ia32/msdos.exe`);
+    const { arch } = process;
+    const msdosPath = context.asAbsolutePath(`./emu/msdos_player/win32-${arch === 'arm64' ? 'ia32' : arch}/msdos.exe`);
     const commandPath = context.asAbsolutePath('./emu/msdos_player/command.com');
     function player(msdosArgs: string[] = ["-e", "-d"], command: string = commandPath) {
         const t = vscode.window.createTerminal({
