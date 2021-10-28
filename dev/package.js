@@ -38,7 +38,7 @@ async function main() {
             emu/dosbox_x
             emu/msdos_player
             !emu/dosbox_x/win32-x64
-            !emu/msdos_player/win32-ia32
+            !emu/msdos_player/win32-x64
             `;
         }
 
@@ -47,6 +47,7 @@ async function main() {
             emu/dosbox_x
             emu/msdos_player
             !emu/dosbox_x/win32-arm64
+            !emu/msdos_player/win32-ia32
             `;
         }
     }

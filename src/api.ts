@@ -79,7 +79,6 @@ export interface API {
      * @see https://github.com/js-dos/emulators
      */
     emulators: Emulators;
-
     /**
      * run Jsdos in ExtensionHost or Webview
      */
@@ -88,17 +87,21 @@ export interface API {
     /**
      * run DOSBox via child_process
      */
-    dosbox: Dosbox
-    ;
+    dosbox: Dosbox;
     /**
      * run DOSBox-x via child_process
      */
     dosboxX: Dosbox;
+
     /**
      * run msdos player via cmd.exe
      * 
      * @returns a terminal to control
      */
-    msdosPlayer: () => vscode.Terminal;
+    msdosPlayer(msdosArgs: string[], command: string): vscode.Terminal;
+    /**path of the packed msdos player */
+    msdosPath: string,
+    /**path of the packed command.com file */
+    commandPath: string
 
 }
