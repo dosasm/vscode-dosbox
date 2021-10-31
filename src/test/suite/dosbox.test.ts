@@ -82,7 +82,7 @@ suite('test DOSBox-like API', function () {
         exit`);
         const bundleData = await zip.generateAsync({ type: "uint8array" });
         if (api) {
-            await api.dosbox.fromBundle(bundleData, testFolder);
+            await api.dosbox.fromBundle(bundleData, testFolder, true);
             await api.dosbox.run();
         }
         const testFile = path.join(testFolder.fsPath, fileName);

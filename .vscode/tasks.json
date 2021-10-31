@@ -20,9 +20,9 @@
       "script": "watch",
       "group": "build",
       "isBackground": true,
-      "runOptions": {
-        "runOn": "folderOpen"
-      },
+      // "runOptions": {
+      //   "runOn": "folderOpen"
+      // },
       "problemMatcher": [
         "$ts-webpack-watch",
         "$tslint-webpack-watch"

@@ -13,18 +13,36 @@ export class Conf {
             throw new Error('error target');
         }
     }
-    has(section: string, key: string): number | undefined {
-        let idx = this._target.findIndex(val => val.includes(`[${section}]`));
-        while (idx < this._target.length) {
-            const line = this._target[idx].trim().replace(/#.*/g, "");//remove comments
-            const [_key, _value] = line.split("=");
-            if (key.trim() === _key.trim()) {
-                return idx;
+
+    /**check whether the config file has the item or not
+     * @returns line number of the section or key
+     */
+    has(section: string, key?: string): number | undefined {
+        let sectionIdx = this._target.findIndex(
+            val => {
+                return val.trim().toLowerCase() === `[${section.trim().toLowerCase()}]`;
             }
-            idx++;
+        );
+        if (key === undefined && sectionIdx >= 0) {
+            return sectionIdx;
+        }
+        for (let i = sectionIdx + 1; i < this._target.length; i++) {
+            const line = this._target[i];
+            if (typeof line !== 'string') {
+                continue;
+            }
+            if (line.trimLeft().startsWith("[")) {
+                break;
+            }
+            const kv = line.replace(/#.*/g, "");
+            const [_key, _value] = kv.split("=");
+            if (key && key.trim().toLowerCase() === _key.trim().toLowerCase()) {
+                return i;
+            }
         }
         return undefined;
     }
+
     get(section: string, key: string) {
         const idx = this.has(section, key);
         if (idx !== undefined) {
@@ -34,13 +52,20 @@ export class Conf {
             }
         }
     }
-    update(section: string, key: string, value: boolean | number | string): boolean {
-        const idx = this.has(section, key);
+
+    update(section: string, key: string, value: boolean | number | string) {
+        let idx = this.has(section, key);
         if (idx !== undefined) {
             this._target[idx] = `${key} = ${value.toString()}`;
-            return true;
         }
-        return false;
+        idx = this.has(section);
+        if (idx !== undefined) {
+            this._target.splice(idx + 1, 0, `${key}=${value}`);
+        }
+        else {
+            this._target.push(`[${section}]`);
+            this._target.push(`${key}=${value}`);
+        }
     }
 
     updateAutoexec(context: string[]) {

@@ -55,8 +55,10 @@ export class DOSBox implements api.Dosbox {
             });
     }
 
-    async fromBundle(bundle: Uint8Array, tempFolder: vscode.Uri): Promise<void> {
+    async fromBundle(bundle: Uint8Array, tempFolder: vscode.Uri, useBundleConf: boolean = false): Promise<void> {
         const confText = await fromBundle(bundle, tempFolder);
-        this._conf = new Conf(confText);
+        if (useBundleConf) {
+            this._conf = new Conf(confText);
+        }
     }
 }

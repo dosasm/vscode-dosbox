@@ -17,7 +17,7 @@ export interface Dosbox {
     /**
      * update the main part of the dosbox configuration file
      */
-    updateConf(section: string, key: string, value: string | number | boolean): boolean,
+    updateConf(section: string, key: string, value: string | number | boolean): void,
     /**
      * update the autoexec section of the dosbox configuration file
      */
@@ -27,8 +27,9 @@ export interface Dosbox {
      * 
      * @param bundle the bundle data
      * @param tempFolder the destination to exact the bundle file
+     * @param useBundleConf use the bundle's dosbox.conf to update the dosbox's one (default false) 
      */
-    fromBundle(bundle: Uint8Array, tempFolder: vscode.Uri): Promise<void>
+    fromBundle(bundle: Uint8Array, tempFolder: vscode.Uri, useBundleConf?: boolean): Promise<void>
     /**
      * run the emulator 
      * 
@@ -98,10 +99,9 @@ export interface API {
      * 
      * @returns a terminal to control
      */
-    msdosPlayer(msdosArgs: string[], command: string): vscode.Terminal;
+    msdosPlayer(msdosArgs?: string[], command?: string): vscode.Terminal;
     /**path of the packed msdos player */
     msdosPath: string,
     /**path of the packed command.com file */
     commandPath: string
-
 }
