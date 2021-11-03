@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import { logger } from '../util/logger';
 
-export function runInWebview(context: vscode.ExtensionContext, bundle: Uint8Array): vscode.Webview {
+export function runInWebview(context: vscode.ExtensionContext, bundle: Uint8Array | string): vscode.Webview {
 
     const viewColumn: vscode.ViewColumn | undefined = vscode.workspace.getConfiguration('vscode-dosbox').get('jsdosWeb.viewColumn');
     const panel = vscode.window.createWebviewPanel(

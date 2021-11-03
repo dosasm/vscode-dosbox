@@ -39,8 +39,12 @@ window.addEventListener('message', async event => {
 
     switch (message.command) {
         case 'start':
+            const bundle: Uint8Array | string = message.bundle;
+            if (typeof bundle === 'string') {
+                main(bundle);
+                break;
+            }
             log('bundle Array received');
-            const bundle: Uint8Array = message.bundle;
             const layers = emulatorsUi.dom.layers(jsdosElement as HTMLDivElement);
             const ci = await emulators.dosboxDirect(bundle);
             log("", false);
