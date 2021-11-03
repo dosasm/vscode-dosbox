@@ -19,14 +19,20 @@
 </head>
 
 <body>
+    <input type="checkbox" id="debug">pause</input>
+    <input type="button" id="debug" value="sound"></input>
     <div class="layout">
         <div id="root" style="width: 100%; height: 100%;"></div>
     </div>
     <script>
         emulators.pathPrefix = "/node_modules/emulators/dist/";
-        bundlePath = "./res/empty.jsdos"
+        bundlePath = "https://doszone-uploads.s3.dualstack.eu-central-1.amazonaws.com/original/2X/2/24b00b14f118580763440ecaddcc948f8cb94f14.jsdos"
     </script>
+    <p id='loadingInfo'>loading</p>
+
+    <textarea id="show"></textarea>
     <script src='./dist/index.js'></script>
+
 </body>
 
 </html>

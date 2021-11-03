@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import { logger } from '../util/logger';
 
 export function runInWebview(context: vscode.ExtensionContext, bundle: Uint8Array): vscode.Webview {
 
@@ -59,14 +60,16 @@ export function runInWebview(context: vscode.ExtensionContext, bundle: Uint8Arra
     
 <body>
     <div class="layout">
-        <div id="root" style="width: 100%; height: 100%;">
-        <p id='loadingInfo'>loading</p>
-        </div>
+        <input type="checkbox" id="debug">pause</input>
+        <input type="button" id="debug" value="sound"></input>
+    <div class="layout">
+        <div id="root" style="width: 100%; height: 100%;"></div>
     </div>
     <script>
         emulators.pathPrefix = "${jsdosScript.emuDist}";
-        bundlePath=undefined
+        bundlePath = undefined
     </script>
+    <p id='loadingInfo'>loading</p>
     <script src='${asWeb("web/dist/index.js")}'></script>
 </body>
 </html>`;
@@ -74,15 +77,26 @@ export function runInWebview(context: vscode.ExtensionContext, bundle: Uint8Arra
     // Handle messages from the webview
     panel.webview.onDidReceiveMessage(
         message => {
-            switch (message.command) {
+            const { command, value } = message;
+            switch (command) {
                 case 'loaded':
-
                     panel.webview.postMessage({
                         command: 'start',
                         bundle
                     });
 
                     return;
+                case 'memoryContents':
+                    let str = "\n";
+                    for (const key in value) {
+                        if (typeof value[key] === 'object') {
+                            str += key + ":\t" + JSON.stringify(value[key]) + "\n";
+                        } else {
+                            str = key + ":" + value[key] + "\t" + str;
+                        }
+                    }
+
+                    logger.channel("[debug]" + new Date().toLocaleTimeString() + "\n" + str).show();
             }
         },
         undefined,
