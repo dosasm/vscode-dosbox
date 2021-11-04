@@ -3,6 +3,9 @@ import { Jsdos } from '../jsdos/Jsdos';
 
 const webresources = [
     {
+        "name": "Input your url"
+    },
+    {
         "name": "empty (only load jsdos)"
     },
     {
@@ -20,9 +23,12 @@ export function activate(context: vscode.ExtensionContext) {
             jsdos.runInWebview();
         } else {
             const pickedName = await vscode.window.showQuickPick(webresources.map(val => val.name));
-            const picked = webresources.find(val => val.name === pickedName);
+            const picked = pickedName === "Input your url"
+                ? await vscode.window.showInputBox({ placeHolder: "Input your url" })
+                : webresources.find(val => val.name === pickedName)?.url;
             if (picked) {
-                jsdos.runInWebview(picked.url);
+                const uri = vscode.Uri.parse(picked);
+                jsdos.runInWebview(uri);
             }
         }
     }

@@ -42,7 +42,7 @@ export interface Jsdos {
     /**
      * set the jsdos bundle to use
      * 
-     * @deprecated use jszip
+     * @deprecated use jszip directly
      * @param bundle the Uint8Array data of the jsdos bundle or its Uri
      * @param updateConf use the conf file in the bundle
      */
@@ -66,10 +66,10 @@ export interface Jsdos {
     /**
      * run **jsdos in the webview**. This works in all platform including web
      * 
-     * @param bundle the Uint8Array data of the jsdos bundle
+     * @param uri the uri of the jsdos bundle, if set undefined, will load from the jszip property
      * @returns the vscode webview running JSDos
      */
-    runInWebview(): Promise<vscode.Webview>,
+    runInWebview(uri?: vscode.Uri): Promise<vscode.Webview>,
 }
 
 export interface API {
