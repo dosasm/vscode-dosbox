@@ -64,7 +64,7 @@ export class Jsdos implements api.Jsdos {
             const bundleData = await fs.readFile(bundle);
             return runInWebview(this.context, bundleData);
         } else {
-            return runInWebview(this.context, bundle.fsPath);
+            return runInWebview(this.context, bundle.toString());
         }
     };
 }

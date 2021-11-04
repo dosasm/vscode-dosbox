@@ -44,9 +44,11 @@ window.addEventListener('message', async event => {
                 main(message.bundle);
                 break;
             }
-            console.log("ss");
-            const bundle: Uint8Array = new Uint8Array(message.bundle);
-            log('bundle Array received');
+            console.log("===bundle received===");
+            const bundle: Uint8Array = Uint8Array.from(
+                message.bundle.data ? message.bundle.data : message.bundle
+            );
+            log('bundle Array received lenghth: ' + bundle.length + "type: " + message.bundle.type);
             const layers = emulatorsUi.dom.layers(jsdosElement as HTMLDivElement);
             const ci = await emulators.dosboxDirect(bundle);
             log("", false);
