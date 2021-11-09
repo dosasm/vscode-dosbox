@@ -57,14 +57,17 @@ export class Conf {
         let idx = this.has(section, key);
         if (idx !== undefined) {
             this._target[idx] = `${key} = ${value.toString()}`;
+            return;
         }
         idx = this.has(section);
         if (idx !== undefined) {
             this._target.splice(idx + 1, 0, `${key}=${value}`);
+            return;
         }
         else {
             this._target.push(`[${section}]`);
             this._target.push(`${key}=${value}`);
+            return;
         }
     }
 

@@ -6,9 +6,15 @@ const os = require('os');
 
 const cwd = path.resolve(__dirname, '..');
 
+let { platform, arch } = process;
+let target = platform + '-' + arch;
+
 const targetIdx = process.argv.findIndex(val => val.includes('--target'));
-const target = process.argv[targetIdx + 1].startsWith('web') ? 'web' : process.argv[targetIdx + 1];
-const [platform, arch] = target.split('-');
+if (targetIdx >= 0) {
+    target = process.argv[targetIdx + 1].startsWith('web') ? 'web' : process.argv[targetIdx + 1];
+    [platform, arch] = target.split('-');
+}
+
 
 const packagePath = `${pak.name}-${target}-${pak.version}.vsix`;
 console.log(`
