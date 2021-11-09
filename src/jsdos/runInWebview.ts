@@ -80,11 +80,12 @@ export function runInWebview(context: vscode.ExtensionContext, bundle: Uint8Arra
             const { command, value } = message;
             switch (command) {
                 case 'loaded':
+                    const bundlePath = typeof bundle === 'string' ? bundle : undefined;
                     panel.webview.postMessage({
                         command: 'start',
-                        bundle
+                        bundle,
+                        bundlePath
                     });
-
                     return;
                 case 'memoryContents':
                     let str = "\n";
@@ -95,7 +96,6 @@ export function runInWebview(context: vscode.ExtensionContext, bundle: Uint8Arra
                             str = key + ":" + value[key] + "\t" + str;
                         }
                     }
-
                     logger.channel("[debug]" + new Date().toLocaleTimeString() + "\n" + str).show();
             }
         },

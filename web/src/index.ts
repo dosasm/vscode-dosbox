@@ -39,16 +39,21 @@ window.addEventListener('message', async event => {
 
     switch (message.command) {
         case 'start':
-            if (typeof message.bundle === 'string') {
-                log("bundle url: " + message.bundle);
-                main(message.bundle);
+            console.log("===bundle received===");
+            if (typeof message.bundlePath === 'string' || typeof message.bundle === 'string') {
+                const bundlePath = message.bundlePath === undefined ? message.bundle : message.bundlePath;
+                log("bundle url: " + bundlePath);
+                main(message.bundlePath);
                 break;
             }
-            console.log("===bundle received===");
-            const bundle: Uint8Array = Uint8Array.from(
-                message.bundle.data ? message.bundle.data : message.bundle
-            );
-            log('bundle Array received lenghth: ' + bundle.length + "type: " + message.bundle.type);
+
+            let bundle: Uint8Array = Uint8Array.from(message.bundle);
+            if (bundle.length === 0 && message.bundle.data) {
+                bundle = Uint8Array.from(message.bundle.data);
+                log("bundle type: " + message.bundle.type);
+            }
+            log('bundle Array received lenghth: ' + bundle.length);
+
             const layers = emulatorsUi.dom.layers(jsdosElement as HTMLDivElement);
             const ci = await emulators.dosboxDirect(bundle);
             log("", false);

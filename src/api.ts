@@ -66,10 +66,14 @@ export interface Jsdos {
     /**
      * run **jsdos in the webview**. This works in all platform including web
      * 
-     * @param uri the uri of the jsdos bundle, if set undefined, will load from the jszip property
+     * @param uri the uri of the jsdos bundle
+     * - if set as undefined, will load from the jszip property
+     * - if set as null,will force to load an empty jszip bundle
+     * - if set as a vscode.Uri with schema of http and https, will load inside the webview
+     * - if set as a vscode.Uri with schema of file, will load in VSCode and post data to the webview
      * @returns the vscode webview running JSDos
      */
-    runInWebview(uri?: vscode.Uri): Promise<vscode.Webview>,
+    runInWebview(uri?: undefined | null | vscode.Uri): Promise<vscode.Webview>,
 }
 
 export interface API {
