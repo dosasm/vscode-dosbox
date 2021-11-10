@@ -19,9 +19,12 @@ export function runInWebview(context: vscode.ExtensionContext, bundle: Uint8Arra
             ]
         }
     );
-    const asWeb = (str: string): vscode.Uri => {
+
+    const asWeb = (str: string): string => {
         const fullpath = vscode.Uri.joinPath(context.extensionUri, str);
-        return panel.webview.asWebviewUri(fullpath);
+        const uri = panel.webview.asWebviewUri(fullpath);
+        const link = uri.toString(true);
+        return link;
     };
 
     const jsdosScript = (process as any).browser ?
