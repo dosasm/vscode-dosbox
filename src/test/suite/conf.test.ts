@@ -1,24 +1,25 @@
 import { Conf } from '../../dosbox/conf';
 import * as assert from 'assert';
+import * as fs from 'fs';
+import * as path from 'path';
 
-suite('dosbox conf test', () => {
-    const conf = new Conf(`
-    [section1]
-    key1=1
-    [SECTION2]
-    key2=val2
-    `);
+suite('dosbox conf test', function () {
+    const file = path.resolve(__dirname, '../../..', 'emu/dosbox/dosbox-0.74.conf');
+    const content = fs.readFileSync(file, { encoding: 'utf-8' });
+    const conf = new Conf(content);
 
     test('update conf', () => {
-        conf.update("section1", "key1", "val1");
-        assert.ok(conf.get("section1", "key1") === "val1", conf.toString());
+        conf.update("sdl", "output", "test");
+        assert.ok(conf.get("sdl", "output") === "test", conf.toString());
+        const strs = conf.toString().split('\n').filter(val => val.trimLeft().startsWith("output"));
+        assert.equal(strs.length, 1, conf.toString());
     });
     test('update conf no key', () => {
-        conf.update("section2", "key3", "val3");
-        assert.ok(conf.get("section2", "key3"), "val3");
+        conf.update("sdl", "test", "test");
+        assert.equal(conf.get("sdl", "test"), "test", conf.toString());
     });
     test('update conf no section no key', () => {
-        conf.update("section3", "key4", "val4");
-        assert.ok(conf.get("section3", "key4",), "val4");
+        conf.update("test", "test", "test");
+        assert.equal(conf.get("test", "test",), "test", conf.toString());
     });
 });

@@ -12,35 +12,4 @@ suite('Web Extension Test Suite', () => {
 		assert.strictEqual(-1, [1, 2, 3].indexOf(5));
 		assert.strictEqual(-1, [1, 2, 3].indexOf(0));
 	});
-
-	test('test jsdos Web API', async function () {
-		this.timeout('99999999');
-		const extension = vscode.extensions.getExtension('xsro.vscode-dosbox');
-		let api: myExtension.API | undefined = await extension?.activate();
-		if (api === undefined) {
-			api = extension?.exports;
-		}
-
-		assert.ok(api !== undefined);
-		if (api) {
-			const webview = await api.jsdos.runInWebview();
-
-			const stdouts = await new Promise<string[]>((resolve, reject) => {
-				const stdouts: string[] = [];
-				webview.onDidReceiveMessage(e => {
-					if (e.command === 'stdout') {
-						stdouts.push(e.value);
-						console.log(e);
-						if (e.value.includes('SET BLASTER=')) {
-							resolve(stdouts);
-						}
-					}
-					setTimeout(() => {
-						reject(stdouts);
-					}, 5000);
-				});
-			});
-			assert.ok(stdouts.length > 10, JSON.stringify(stdouts));
-		}
-	});
 });
