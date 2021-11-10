@@ -64,7 +64,7 @@ export function runInWebview(context: vscode.ExtensionContext, bundle: Uint8Arra
 <body>
     <div class="layout">
         <input type="checkbox" id="debug">pause</input>
-        <input type="button" id="debug" value="sound"></input>
+        <input type="checkbox" id="sound">sound</input>
     <div class="layout">
         <div id="root" style="width: 100%; height: 100%;"></div>
     </div>

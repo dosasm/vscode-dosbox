@@ -17,8 +17,22 @@ const copyDosMemory = false;
 
 export function onGetCi(ci: CommandInterface) {
     postCi.setCi(ci);
+    const soundElement = document.getElementById("sound") as HTMLInputElement | null;
+    if (soundElement) {
+        soundElement.checked = true;
+        soundElement.addEventListener(
+            "input", e => {
+                if ((e.target as any).checked) {
+                    ci.unmute();
+                } else {
+                    ci.mute();
+                }
+            }
+        );
+    }
+
     document.getElementById("debug")?.addEventListener(
-        "click", (e) => {
+        "input", (e) => {
             if (e.target && (e.target as any).checked) {
                 //access memory
                 //https://js-dos.com/v7/build/docs/dosbox-direct#accessing-memory

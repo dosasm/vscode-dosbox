@@ -3,7 +3,7 @@
 	"publisher": "xsro",
 	"displayName": "VSCode DOSBox",
 	"description": "DOSBox interface for VSCode",
-	"version": "0.1.6",
+	"version": "0.1.7",
 	"preview": true,
 	"engines": {
 		"vscode": "^1.61.0"

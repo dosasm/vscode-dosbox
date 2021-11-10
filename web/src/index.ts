@@ -61,11 +61,8 @@ window.addEventListener('message', async event => {
             emulatorsUi.graphics.webGl(layers, ci);
             emulatorsUi.controls.keyboard(layers, ci);
             emulatorsUi.controls.mouse(layers, ci);
-            document.getElementById("sound")?.addEventListener(
-                "click", e => {
-                    emulatorsUi.sound.audioNode(ci);
-                }
-            );
+
+            emulatorsUi.sound.audioNode(ci);
             onGetCi(ci);
             break;
     }
