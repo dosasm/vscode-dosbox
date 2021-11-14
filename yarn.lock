@@ -1154,7 +1154,7 @@ emulators-ui@^0.71.7:
 
 emulators@^0.72.0:
   version "0.72.0"
-  resolved "https://registry.npmmirror.com/emulators/download/emulators-0.72.0.tgz"
+  resolved "https://registry.npmmirror.com/emulators/download/emulators-0.72.0.tgz#86f301421e0ca9aaa43a9e14d73e0ee61ebde35d"
   integrity sha1-hvMBQh4MqaqkOp4U1z4O5h69410=
 
 encodeurl@^1.0.2:
@@ -2648,6 +2648,11 @@ normalize-url@2.0.1:
     prepend-http "^2.0.0"
     query-string "^5.0.1"
     sort-keys "^2.0.0"
+
+notyf@^3.10.0:
+  version "3.10.0"
+  resolved "https://registry.npmmirror.com/notyf/download/notyf-3.10.0.tgz#67a64443c69ea0e6495c56ea0f91198860163d06"
+  integrity sha1-Z6ZEQ8aeoOZJXFbqD5EZiGAWPQY=
 
 npm-run-path@^4.0.1:
   version "4.0.1"

@@ -17,6 +17,7 @@
         "semi": "off"
     },
     "ignorePatterns": [
-        "**/*.d.ts"
+        "**/*.d.ts",
+        "src/emulators"
     ]
 }

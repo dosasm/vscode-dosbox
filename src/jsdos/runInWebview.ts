@@ -15,7 +15,8 @@ export function runInWebview(context: vscode.ExtensionContext, bundle: Uint8Arra
             localResourceRoots: [
                 vscode.Uri.joinPath(context.extensionUri, 'node_modules/emulators/dist'),
                 vscode.Uri.joinPath(context.extensionUri, 'node_modules/emulators-ui/dist'),
-                vscode.Uri.joinPath(context.extensionUri, 'web/dist'),
+                vscode.Uri.joinPath(context.extensionUri, 'dist'),
+                vscode.Uri.joinPath(context.extensionUri, 'src'),
             ]
         }
     );
@@ -56,24 +57,30 @@ export function runInWebview(context: vscode.ExtensionContext, bundle: Uint8Arra
             padding: 0;
         }
     </style>
-    <script src="${jsdosScript.emu}"></script>
     <script src="${jsdosScript.ui}"></script>
     <link rel="stylesheet" href="${jsdosScript.uiCss}">
 </head>
     
 <body>
-    <div class="layout">
-        <input type="checkbox" id="debug">pause</input>
-        <input type="checkbox" id="sound">sound</input>
-    <div class="layout">
-        <div id="root" style="width: 100%; height: 100%;"></div>
-    </div>
-    <script>
-        emulators.pathPrefix = "${jsdosScript.emuDist}";
-        bundlePath = undefined
-    </script>
-    <p id='loadingInfo'>loading</p>
-    <script src='${asWeb("web/dist/index.js")}'></script>
+<input type="checkbox" id="debug">pause</input>
+<input type="checkbox" id="sound">sound</input>
+<select id="emulatorFunction">
+    <option value="dosboxWorker">Worker</option>
+    <option value="dosboxDirect">Direct</option>
+</select>
+<div class="layout">
+    <div id="root" style="width: 100%; height: 100%;"></div>
+</div>
+<script>
+    window.jsdosconfig = {
+        pathPrefix: "${jsdosScript.emuDist}",
+        bundlePath: undefined
+    }
+</script>
+<p id='loadingInfo'>loading</p>
+
+<textarea id="show"></textarea>
+    <script src='${asWeb("dist/index.js")}'></script>
 </body>
 </html>`;
 

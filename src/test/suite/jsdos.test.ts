@@ -4,13 +4,10 @@ import * as assert from 'assert';
 // as well as import your extension to test it
 import * as vscode from 'vscode';
 import * as myExtension from '../../extension';
-import { jsdosWebTestSuite } from '../../web/test/suite/jsdos.test';
 
 let api: myExtension.API;
 
-jsdosWebTestSuite;
-
-suite('test jsdos API', function () {
+export const jsdosNodeTestSuite = suite('test jsdos API', function () {
 
     this.beforeEach(async function () {
         const extension = vscode.extensions.getExtension('xsro.vscode-dosbox');
@@ -21,9 +18,6 @@ suite('test jsdos API', function () {
     });
 
     test('launch jsdos in extension host', async function () {
-        if ((process as any).browser) {
-            this.skip();
-        }
         const ci = await api.jsdos.runInHost();
         assert.ok(typeof ci.width() === 'number');
         ci.exit();

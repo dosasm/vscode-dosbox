@@ -1,17 +1,18 @@
-import { CommandInterface } from "emulators";
+import { CommandInterface } from "../emulators/emulators";
+import { emulatorFunction } from "./loadJsdos";
 import { PostCi } from "./postCi";
 declare const acquireVsCodeApi: () => { postMessage: (val: unknown) => undefined };
 
-export let postMessage = (val: unknown) => console.log(val);
+export let _postMessage = (val: unknown) => console.log(val);
 
 try {
     const vscode = acquireVsCodeApi();
-    postMessage = vscode.postMessage;
+    _postMessage = vscode.postMessage;
 } catch (e) {
     console.log(e);
 }
 
-const postCi = new PostCi(postMessage);
+const postCi = new PostCi(_postMessage);
 
 const copyDosMemory = false;
 
@@ -37,13 +38,16 @@ export function onGetCi(ci: CommandInterface) {
                 //access memory
                 //https://js-dos.com/v7/build/docs/dosbox-direct#accessing-memory
                 ci.pause();
-                (ci as any).transport.module._dumpMemory(copyDosMemory);
-                const cts = (ci as any).transport.module.memoryContents;
                 const text = document.getElementById("show");
-                if (text) {
-                    text.innerHTML = JSON.stringify(cts, undefined, "\t");
+                if (emulatorFunction === 'dosboxDirect') {
+                    (ci as any).transport.module._dumpMemory(copyDosMemory);
+                    const cts = (ci as any).transport.module.memoryContents;
+                    if (text) {
+                        text.innerHTML = JSON.stringify(cts, undefined, "\t");
+                    }
+                    _postMessage({ command: "memoryContents", value: cts });
                 }
-                postMessage({ command: "memoryContents", value: cts });
+
             } else {
                 ci.resume();
             }
