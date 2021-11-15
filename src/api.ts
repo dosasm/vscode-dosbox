@@ -74,6 +74,7 @@ export interface Jsdos {
      * @returns the vscode webview running JSDos
      */
     runInWebview(uri?: undefined | null | vscode.Uri): Promise<vscode.Webview>,
+    runInWebviewPanel(bundle?: vscode.Uri | null | undefined): Promise<vscode.WebviewPanel>,
 }
 
 export interface API {

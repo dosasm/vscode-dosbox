@@ -27,11 +27,11 @@ export const jsdosWebTestSuite = suite('test jsdos API', function () {
     });
 
     test('launch jsdos in webview with empty bundle', async function () {
-        const webview = await api.jsdos.runInWebview(null);
+        const panel = await api.jsdos.runInWebviewPanel(null);
 
         const stdouts = await new Promise<string[]>((resolve, reject) => {
             const stdouts: string[] = [];
-            webview.onDidReceiveMessage(e => {
+            panel.webview.onDidReceiveMessage(e => {
                 if (e.command === 'stdout') {
                     stdouts.push(e.value);
                     if (e.value.includes('SET BLASTER=')) {
@@ -44,16 +44,17 @@ export const jsdosWebTestSuite = suite('test jsdos API', function () {
             });
         });
         assert.ok(stdouts.length > 10, JSON.stringify(stdouts));
+        panel.dispose();
     });
 
 
     test('launch jsdos in webview with https url', async () => {
         const uri = vscode.Uri.parse("https://doszone-uploads.s3.dualstack.eu-central-1.amazonaws.com/original/2X/2/24b00b14f118580763440ecaddcc948f8cb94f14.jsdos");
-        const webview = await api.jsdos.runInWebview(uri);
+        const panel = await api.jsdos.runInWebviewPanel(uri);
 
         const stdouts = await new Promise<string[]>((resolve, reject) => {
             const stdouts: string[] = [];
-            webview.onDidReceiveMessage(e => {
+            panel.webview.onDidReceiveMessage(e => {
                 if (e.command === 'stdout') {
                     stdouts.push(e.value);
                     if (e.value.includes('C:\\>DIGGER.COM')) {
@@ -66,5 +67,6 @@ export const jsdosWebTestSuite = suite('test jsdos API', function () {
             });
         });
         assert.ok(stdouts.length > 10, JSON.stringify(stdouts));
+        panel.dispose();
     });
 });

@@ -54,8 +54,11 @@ export class Jsdos implements api.Jsdos {
         const bundleData = await this.getBundleData();
         return emulators.dosboxDirect(bundleData);
     }
-
     async runInWebview(bundle?: vscode.Uri | null | undefined): Promise<vscode.Webview> {
+        const panel = await this.runInWebviewPanel(bundle);
+        return panel.webview;
+    }
+    async runInWebviewPanel(bundle?: vscode.Uri | null | undefined): Promise<vscode.WebviewPanel> {
         if (bundle === undefined) {
             const bundleData = await this.getBundleData();
             return runInWebview(this.context, bundleData);
