@@ -21,7 +21,7 @@ class Host {
     public wasmSupported = false;
     public globals: Globals;
     constructor() {
-        this.globals = typeof window === "undefined" ? {} : window as any;
+        this.globals = typeof window === "undefined" ? self : window as any;
         if (!this.globals.exports) {
             this.globals.exports = {};
         }
@@ -198,7 +198,16 @@ function loadWasmModuleBrowser(url: string,
                 .then((instance) => receiveInstance(instance, wasmModule));
             return; // no-return
         };
-        eval.call(window, script as string);    
+
+        eval.call(
+            typeof window ==="object"
+            ?window
+            :self
+            ,script as string);
+            
+        if(host.globals.exports[moduleName]===undefined){
+            throw new Error("load wdosbox.js failed");
+        }
 
         return new CompiledBrowserModule(wasmModule,
             host.globals.exports[moduleName],

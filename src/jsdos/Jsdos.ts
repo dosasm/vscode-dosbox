@@ -67,7 +67,7 @@ export class Jsdos implements api.Jsdos {
         return bundleData;
     }
     async runInHost(bundle?: vscode.Uri | null | undefined): Promise<CommandInterface> {
-        const func:EmulatorFunction=((process as any).browser)?"dosboxWorker":"dosboxDirect";
+        const func:EmulatorFunction=/* ((process as any).browser)?"dosboxWorker": */"dosboxDirect";
         if (bundle === undefined) {
             const bundleData = await this.getBundleData();
             return emulators[func](bundleData);
