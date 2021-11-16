@@ -62,7 +62,7 @@ export interface Jsdos {
      * @todo make this also work in web extension
      * @returns [CommandInterface](https://js-dos.com/v7/build/docs/command-interface)
      */
-    runInHost(): Promise<CommandInterface>,
+    runInHost(bundle?: vscode.Uri | null | undefined,useWorker?:boolean): Promise<CommandInterface>,
     /**
      * run **jsdos in the webview**. This works in all platform including web
      * 

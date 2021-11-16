@@ -17,8 +17,17 @@ export const jsdosNodeTestSuite = suite('test jsdos API', function () {
         assert.ok(api !== undefined, api ? Object.keys(api).toString() : "api can't get");
     });
 
-    test('launch jsdos in extension host', async function () {
-        const ci = await api.jsdos.runInHost();
+    test('launch jsdos in extension host direct', async function () {
+        const ci = await api.jsdos.runInHost(undefined,false);
+        assert.ok(typeof ci.width() === 'number');
+        ci.exit();
+    });
+
+    test('launch jsdos in extension host webworker', async function () {
+        if(process.platform){
+            this.skip();
+        }
+        const ci = await api.jsdos.runInHost(undefined,true);
         assert.ok(typeof ci.width() === 'number');
         ci.exit();
     });

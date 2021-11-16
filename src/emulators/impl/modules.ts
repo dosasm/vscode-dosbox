@@ -21,7 +21,12 @@ class Host {
     public wasmSupported = false;
     public globals: Globals;
     constructor() {
-        this.globals = typeof window === "undefined" ? self : window as any;
+        this.globals = typeof window !== "undefined" 
+        ?  window as any
+        : typeof self !== "undefined" ? 
+        self as any
+        :{}
+
         if (!this.globals.exports) {
             this.globals.exports = {};
         }

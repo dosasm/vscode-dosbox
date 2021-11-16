@@ -8,11 +8,27 @@ export async function dosWorker(workerUrl: string,
     const messagesQueue = new MessagesQueue();
     let handler: MessageHandler = messagesQueue.handler.bind(messagesQueue);
 
-    const blob =await fetch(workerUrl)
-        .then(result => result.blob());
-    const blobUrl = URL.createObjectURL(blob);
+    if(typeof window!=='undefined'){
 
-    const worker = new Worker(blobUrl);
+    }
+
+    let worker:Worker
+
+    //if runs in webview we need to use fetch API to re
+    if(typeof window !=="undefined"){
+        const blob =await fetch(workerUrl)
+            .then(result => result.blob());
+        const blobUrl = URL.createObjectURL(blob);
+        worker = new Worker(blobUrl);
+    }
+    else if(typeof global!==undefined){
+        const {Worker} = eval("require")('worker_threads');
+        worker=new Worker(workerUrl);
+    }
+    else{
+        worker=new Worker(workerUrl);
+    }
+    
     worker.onerror = (e) => {
         handler("ws-err", { type: e.type, filename: e.filename, message: e.message });
     };

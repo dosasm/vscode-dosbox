@@ -17,8 +17,8 @@ export class Jsdos implements api.Jsdos {
     public jszip: Jszip = new Jszip();
 
     constructor(private context: vscode.ExtensionContext) {
-        this.pathPrefix = context.asAbsolutePath('/node_modules/emulators/dist/');
         const dist=vscode.Uri.joinPath(context.extensionUri,"/node_modules/emulators/dist/");
+        this.pathPrefix=dist.scheme==="file"?dist.fsPath:dist.toString();
 
         logger.channel(JSON.stringify(context.extensionUri)).show();
         //take over HTTP request for running as web extension
@@ -66,8 +66,13 @@ export class Jsdos implements api.Jsdos {
         const bundleData = await this.jszip.generateAsync({ type: 'uint8array' });
         return bundleData;
     }
-    async runInHost(bundle?: vscode.Uri | null | undefined): Promise<CommandInterface> {
-        const func:EmulatorFunction=/* ((process as any).browser)?"dosboxWorker": */"dosboxDirect";
+    async runInHost(bundle?: vscode.Uri | null | undefined,useWorker?:boolean): Promise<CommandInterface> {
+        let func:EmulatorFunction=((process as any).browser)?"dosboxWorker":"dosboxDirect";
+        if(useWorker===true){
+            func="dosboxWorker";
+        }else if(useWorker===false){
+            func="dosboxDirect";
+        }
         if (bundle === undefined) {
             const bundleData = await this.getBundleData();
             return emulators[func](bundleData);
