@@ -59,7 +59,13 @@ export interface Jsdos {
     /**
      * run jsdos in the VSCode's extension Host
      * 
-     * @todo make this also work in web extension
+     * @param bundle: the uri of the jsdos bundle
+     * - if set as undefined, will load from the jszip property
+     * - if set as null,will force to load an empty jszip bundle
+     * - if set as a vscode.Uri with schema of file, will load in VSCode and post data to the webview
+     * @param useWorker use dosboxWorker or dosboxDirect
+     * - by default, dosboxDirect for nodejs env and dosboxWorker for browser env
+     * - dosboxWorker now can't work on the nodejs env
      * @returns [CommandInterface](https://js-dos.com/v7/build/docs/command-interface)
      */
     runInHost(bundle?: vscode.Uri | null | undefined,useWorker?:boolean): Promise<CommandInterface>,
