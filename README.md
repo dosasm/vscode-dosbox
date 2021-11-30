@@ -87,6 +87,10 @@ This extension contributes the following settings:
 * `vscode-dosbox.command.dosbox`:  customize your command to open dosbox
 * `vscode-dosbox.command.dosboxX`: customize your command to open dosbox-x
 
+## Report
+
+report bugs in [github issues](https://github.com/dosasm/vscode-dosbox/issues)
+
 ## Known Issues
 
 Calling out known issues can help limit users opening duplicate issues against your extension.
