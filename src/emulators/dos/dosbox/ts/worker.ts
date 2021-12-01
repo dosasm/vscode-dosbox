@@ -1,6 +1,7 @@
 import { WasmModule } from "../../../impl/modules";
 import { TransportLayer, MessageHandler, ClientMessage } from "../../../protocol/protocol";
 import { MessagesQueue } from "../../../protocol/messages-queue";
+import { isBrowser, isNode, isWebWorker, isJsDom, isDeno } from "browser-or-node";
 
 export async function dosWorker(workerUrl: string,
                                  wasmModule: WasmModule,
@@ -15,13 +16,13 @@ export async function dosWorker(workerUrl: string,
     let worker:Worker
 
     //if runs in webview we need to use fetch API to re
-    if(typeof window !=="undefined"){
+    if(isBrowser){
         const blob =await fetch(workerUrl)
             .then(result => result.blob());
         const blobUrl = URL.createObjectURL(blob);
         worker = new Worker(blobUrl);
     }
-    else if(typeof global!==undefined){
+    else if(isNode){
         const {Worker} = eval("require")('worker_threads');
         worker=new Worker(workerUrl);
     }

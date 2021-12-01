@@ -44,7 +44,7 @@
 			},
 			{
 				"command": "dosbox.startJsdos",
-				"title": "start jsdos in your machine(node environment)"
+				"title": "start jsdos in extensionHost"
 			},
 			{
 				"command": "dosbox.openMsdosPlayer",
@@ -78,6 +78,17 @@
 							"use default English config",
 							"use zh_CN config",
 							"follow vscode's language config"
+						]
+					},
+					"vscode-dosbox.jsdos.ignore": {
+						"type": "array",
+						"items": {
+							"type": "string"
+						},
+						"default": [
+							"\\.git",
+							"\\.vscode",
+							"node_modules"
 						]
 					},
 					"vscode-dosbox.jsdosWeb.column": {
@@ -123,6 +134,7 @@
 		"@typescript-eslint/parser": "^4.31.1",
 		"@vscode/test-web": "^0.0.13",
 		"assert": "^2.0.0",
+		"browser-or-node": "^2.0.0",
 		"download": "^8.0.0",
 		"eslint": "^7.32.0",
 		"glob": "^7.2.0",

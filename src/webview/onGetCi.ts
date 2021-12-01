@@ -1,23 +1,33 @@
-import { CommandInterface } from "../emulators/emulators";
+import { CommandInterface } from "emulators";
+import { JsdosShell } from "../jsdos-ci-shell/main";
+import { VscConnect } from "./connection";
 import { emulatorFunction } from "./loadJsdos";
-import { PostCi } from "./postCi";
-declare const acquireVsCodeApi: () => { postMessage: (val: unknown) => undefined };
 
-export let _postMessage = (val: unknown) => console.log(val);
+export let ci: CommandInterface | null = null;
 
-try {
-    const vscode = acquireVsCodeApi();
-    _postMessage = vscode.postMessage;
-} catch (e) {
-    console.log(e);
+export function onGetCi(_ci: CommandInterface) {
+    if (ci) {
+        ci.pause();
+        ci.exit();
+    }
+    ci = _ci;
+
+    if(ci){
+        renderUi(ci);
+        const shell=new JsdosShell(ci);
+        shell.onStdout(value=>{
+            VscConnect.post({
+                command: "stdout",
+                value
+            });
+        });
+        VscConnect.listen("stdin",(message:any)=>shell.shell(message.value));
+    }
+
 }
 
-const postCi = new PostCi(_postMessage);
-
 const copyDosMemory = false;
-
-export function onGetCi(ci: CommandInterface) {
-    postCi.setCi(ci);
+function renderUi(ci: CommandInterface) {
     const soundElement = document.getElementById("sound") as HTMLInputElement | null;
     if (soundElement) {
         soundElement.checked = true;
@@ -45,7 +55,7 @@ export function onGetCi(ci: CommandInterface) {
                     if (text) {
                         text.innerHTML = JSON.stringify(cts, undefined, "\t");
                     }
-                    _postMessage({ command: "memoryContents", value: cts });
+                    VscConnect.post({ command: "memoryContents", value: cts });
                 }
 
             } else {

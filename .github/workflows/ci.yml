@@ -45,8 +45,7 @@ jobs:
         if: runner.os == 'Linux'
 
       - run: |
-          yarn test
-          yarn test-local
+          yarn test && yarn test-local
         env:
           DISPLAY: ":99.0"
 

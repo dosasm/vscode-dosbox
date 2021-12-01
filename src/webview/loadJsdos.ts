@@ -1,15 +1,15 @@
-import { emulators, CommandInterface } from '../emulators/emulators';
+import { emulators } from '../emulators/emulators';
 import { EmulatorsUi } from 'emulators-ui';
+import { CommandInterface } from 'emulators';
 import { onGetCi } from './onGetCi';
 
 declare const emulatorsUi: EmulatorsUi;
-
 declare const jsdosconfig: {
     pathPrefix: string,
     bundlePath: string | undefined,
     lastBundle?: string | Uint8Array | undefined,
-    ci?: CommandInterface | undefined
 };
+
 emulators.pathPrefix = jsdosconfig.pathPrefix;
 
 let jsdosElement = document.getElementById("root");
@@ -27,10 +27,6 @@ document.getElementById("emulatorFunction")?.addEventListener(
         }
         if (jsdosconfig.lastBundle) {
             start(jsdosconfig.lastBundle);
-        }
-        if (jsdosconfig.ci) {
-            jsdosconfig.ci.pause();
-            jsdosconfig.ci.exit();
         }
         if (jsdosElement) {
             const _canvas = jsdosElement.getElementsByClassName("emulator-canvas");
@@ -60,16 +56,19 @@ async function fromBundleData(bundleData: Uint8Array) {
     return ci;
 }
 
-export async function start(bundle: Uint8Array | string) {
+export async function start(bundle: Uint8Array | string): Promise<CommandInterface> {
     jsdosconfig.lastBundle = bundle;
     let ci;
     if (typeof bundle === 'string') {
         ci = await fromUrl(bundle);
-    } else  {
+    } else {
         ci = await fromBundleData(bundle);
     }
-    if(ci){
-        jsdosconfig.ci = ci as CommandInterface;
-        onGetCi(jsdosconfig.ci);
+    if (ci) {
+        onGetCi(ci);
+        return ci;
+    }
+    else {
+        throw new Error("can't load from: " + bundle);
     }
 }

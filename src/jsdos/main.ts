@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import { createBundle } from '../jsdos-bundle/bundle';
 import { Jsdos } from '../jsdos/Jsdos';
 
 const input = "Input your url";
@@ -45,13 +46,32 @@ export function activate(context: vscode.ExtensionContext) {
     }
     );
 
-    context.subscriptions.push(disposable);
-
-    let disposable2 = vscode.commands.registerCommand('dosbox.startJsdos', async (bundle: vscode.Uri) => {
-        jsdos.runInHost(bundle);
+    let disposable2 = vscode.commands.registerCommand('dosbox.startJsdos', async (_bundle?: vscode.Uri) => {
+        let bundle: vscode.Uri | null | undefined = _bundle;
+        if (vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders[0]) {
+            const workspaceBundle = await createBundle({
+                mount: [{
+                    dir: vscode.workspace.workspaceFolders[0].uri,
+                    disk: 'd'
+                }]
+            }).catch(console.warn);
+            if (workspaceBundle) {
+                jsdos.jszip = workspaceBundle;
+                jsdos.updateAutoexec([
+                    "@mount c .",
+                    "@mount d ./d",
+                    "d:"
+                ]);
+                bundle = undefined;
+            }
+        }
+        const ci = await jsdos.runInHost(bundle);
+        const t = ci.terminal();
+        t.show();
     });
-    context.subscriptions.push(disposable2);
 
-    return { jsdos };
+    context.subscriptions.push(disposable, disposable2);
+
+    return { jsdos, createBundle };
 }
 

@@ -7,6 +7,22 @@ import { CommandInterface, Emulators } from './emulators/emulators';
 import * as Jszip from 'jszip';
 import * as vscode from 'vscode';
 
+export interface CreateBundleOptions {
+    sample?: string,
+    boxConf?: string,
+    mount?: { dir: vscode.Uri, disk: string }[],
+}
+
+export interface CI extends CommandInterface {
+    /**a simple shell with stdout and stdin */
+    shell: {
+        onStdout: (consumer: (message: string) => void) => void,
+        shell: (cmd: string) => void,
+    },
+    /**use jsdos shell as VSCode Terminal */
+    terminal(): vscode.Terminal;
+}
+
 export interface DosboxResult {
     stdout: string,
     stderr: string,
@@ -24,15 +40,15 @@ export interface Dosbox {
     updateAutoexec(context: string[]): void,
     /**
      * update the conf file from jsdos bundle
-     * 
+     *
      * @param bundle the bundle data
      * @param tempFolder the destination to exact the bundle file
-     * @param useBundleConf use the bundle's dosbox.conf to update the dosbox's one (default false) 
+     * @param useBundleConf use the bundle's dosbox.conf to update the dosbox's one (default false)
      */
     fromBundle(bundle: Uint8Array, tempFolder: vscode.Uri, useBundleConf?: boolean): Promise<void>
     /**
-     * run the emulator 
-     * 
+     * run the emulator
+     *
      * @param params the parameter passed to dosbox via command line
      */
     run(params?: string[]): Promise<DosboxResult>
@@ -41,7 +57,7 @@ export interface Dosbox {
 export interface Jsdos {
     /**
      * set the jsdos bundle to use
-     * 
+     *
      * @deprecated use jszip directly
      * @param bundle the Uint8Array data of the jsdos bundle or its Uri
      * @param updateConf use the conf file in the bundle
@@ -49,8 +65,8 @@ export interface Jsdos {
     setBundle(bundle: vscode.Uri | Uint8Array, updateConf?: boolean): void,
     /**
      * the [jszip object](https://stuk.github.io/jszip/)
-     * 
-     * change this to change the bundle's data, 
+     *
+     * change this to change the bundle's data,
      * the extension call it to generate bundle data
      */
     jszip: Jszip;
@@ -58,20 +74,20 @@ export interface Jsdos {
     updateAutoexec(context: string[]): void,
     /**
      * run jsdos in the VSCode's extension Host
-     * 
+     *
      * @param bundle: the uri of the jsdos bundle
      * - if set as undefined, will load from the jszip property
      * - if set as null,will force to load an empty jszip bundle
-     * - if set as a vscode.Uri with schema of file, will load in VSCode and post data to the webview
+     * - if set as a vscode.Uri with schema of file, will load in VSCode with workspace.fs API
      * @param useWorker use dosboxWorker or dosboxDirect
      * - by default, dosboxDirect for nodejs env and dosboxWorker for browser env
      * - dosboxWorker now can't work on the nodejs env
      * @returns [CommandInterface](https://js-dos.com/v7/build/docs/command-interface)
      */
-    runInHost(bundle?: vscode.Uri | null | undefined,useWorker?:boolean): Promise<CommandInterface>,
+    runInHost(bundle?: vscode.Uri | null | undefined, useWorker?: boolean): Promise<CI>,
     /**
      * run **jsdos in the webview**. This works in all platform including web
-     * 
+     *
      * @param uri the uri of the jsdos bundle
      * - if set as undefined, will load from the jszip property
      * - if set as null,will force to load an empty jszip bundle
@@ -84,10 +100,13 @@ export interface Jsdos {
 }
 
 export interface API {
+
+    /**create a bundle with recursively mount directories */
+    createBundle: (optiion: CreateBundleOptions) => Promise<Jszip>
     /**
-     * [jsdos](https://js-dos.com/v7/build/) emulator 
+     * [jsdos](https://js-dos.com/v7/build/) emulator
      *  is the core of jsdos -- the simpliest API to run DOS games in browser
-     * 
+     *
      * @see https://github.com/js-dos/emulators
      */
     emulators: Emulators;
@@ -107,7 +126,7 @@ export interface API {
 
     /**
      * run msdos player via cmd.exe
-     * 
+     *
      * @returns a terminal to control
      */
     msdosPlayer(msdosArgs?: string[], command?: string): vscode.Terminal;

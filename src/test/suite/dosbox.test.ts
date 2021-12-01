@@ -8,6 +8,7 @@ import * as myExtension from '../../extension';
 import * as os from 'os';
 import * as path from 'path';
 import * as fs from 'fs';
+import { randomString } from './util';
 
 const testFolderName = Math.floor(Math.random() * 10 ** 10).toString();
 const testDir = path.join(os.tmpdir(), testFolderName);
@@ -30,7 +31,7 @@ suite('test DOSBox-like API', function () {
 
     test('test dosbox API', async function () {
         if (api) {
-            const data = Math.random().toString();
+            const data = randomString();
             const fileName = 'DOSBOX.TXT';
             api.dosbox.updateAutoexec([
                 `mount c ${testDir}`,
@@ -54,7 +55,7 @@ suite('test DOSBox-like API', function () {
             console.log('make and use ' + testDir2);
         }
         if (api) {
-            const data = Math.random().toString();
+            const data = randomString();
             const fileName = 'DOSBOXX.TXT';
             api.dosboxX.updateAutoexec([
                 `mount c ${testDir2}`,
@@ -72,7 +73,7 @@ suite('test DOSBox-like API', function () {
 
     test('start from jsdos bundle', async function () {
         const zip = new Jszip();
-        const data = Math.random().toString();
+        const data = randomString();
         const testFolder = vscode.Uri.file(path.resolve(testDir, 'dosbox-from-bundle'));
         const fileName = 'TEST.TXT';
         zip.file(".jsdos/dosbox.conf", `

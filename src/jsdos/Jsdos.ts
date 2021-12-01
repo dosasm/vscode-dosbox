@@ -3,10 +3,11 @@ import * as vscode from 'vscode';
 import * as api from '../api';
 import { Conf } from '../dosbox/conf';
 import * as Jszip from 'jszip';
-import { emulators } from './runInHost';
+import { createTerminal, emulators } from './runInHost';
 import { runInWebview } from './runInWebview';
 import { EmulatorFunction } from 'emulators-ui/dist/types/js-dos';
 import { logger } from '../util/logger';
+import { JsdosShell } from '../jsdos-ci-shell/main';
 
 const fs = vscode.workspace.fs;
 
@@ -17,17 +18,17 @@ export class Jsdos implements api.Jsdos {
     public jszip: Jszip = new Jszip();
 
     constructor(private context: vscode.ExtensionContext) {
-        const dist=vscode.Uri.joinPath(context.extensionUri,"/node_modules/emulators/dist/");
-        this.pathPrefix=dist.scheme==="file"?dist.fsPath:dist.toString();
+        const dist = vscode.Uri.joinPath(context.extensionUri, "/node_modules/emulators/dist/");
+        this.pathPrefix = dist.scheme === "file" ? dist.fsPath : dist.toString();
 
         logger.channel(JSON.stringify(context.extensionUri)).show();
         //take over HTTP request for running as web extension
-        emulators.HTTPRequest=async function (url: string, options: any): Promise<string | ArrayBuffer>{
-            const filename=url.substr(url.lastIndexOf("/")+1);
-            const inExt=vscode.Uri.joinPath(dist,filename);
-            const fileArr=await fs.readFile(inExt);
-            console.log(url,options);
-            if(options.responseType=== "arraybuffer"){
+        emulators.HTTPRequest = async function (url: string, options: any): Promise<string | ArrayBuffer> {
+            const filename = url.substr(url.lastIndexOf("/") + 1);
+            const inExt = vscode.Uri.joinPath(dist, filename);
+            const fileArr = await fs.readFile(inExt);
+            console.log(url, options);
+            if (options.responseType === "arraybuffer") {
                 return fileArr;
             }
             return new TextDecoder().decode(fileArr);
@@ -66,12 +67,20 @@ export class Jsdos implements api.Jsdos {
         const bundleData = await this.jszip.generateAsync({ type: 'uint8array' });
         return bundleData;
     }
-    async runInHost(bundle?: vscode.Uri | null | undefined,useWorker?:boolean): Promise<CommandInterface> {
-        let func:EmulatorFunction=((process as any).browser)?"dosboxWorker":"dosboxDirect";
-        if(useWorker===true){
-            func="dosboxWorker";
-        }else if(useWorker===false){
-            func="dosboxDirect";
+
+    public async runInHost(bundle?: vscode.Uri | null | undefined, useWorker?: boolean): Promise<api.CI> {
+        const ci = await this._runInHost(bundle, useWorker) as api.CI;
+        const shell = new JsdosShell(ci);
+        ci.shell = shell;
+        ci.terminal = () => createTerminal(shell);
+        return ci;
+    }
+    private async _runInHost(bundle?: vscode.Uri | null | undefined, useWorker?: boolean): Promise<CommandInterface> {
+        let func: EmulatorFunction = ((process as any).browser) ? "dosboxWorker" : "dosboxDirect";
+        if (useWorker === true) {
+            func = "dosboxWorker";
+        } else if (useWorker === false) {
+            func = "dosboxDirect";
         }
         if (bundle === undefined) {
             const bundleData = await this.getBundleData();
@@ -89,6 +98,7 @@ export class Jsdos implements api.Jsdos {
         }
         throw new Error("bundle uri is not a uri with schema file or undefined/null");
     }
+
     async runInWebview(bundle?: vscode.Uri | null | undefined): Promise<vscode.Webview> {
         const panel = await this.runInWebviewPanel(bundle);
         return panel.webview;

@@ -4,6 +4,7 @@ import * as assert from 'assert';
 // as well as import your extension to test it
 import * as vscode from 'vscode';
 import * as myExtension from '../../extension';
+import { randomString } from './util';
 
 let api: myExtension.API;
 
@@ -18,16 +19,40 @@ export const jsdosNodeTestSuite = suite('test jsdos API', function () {
     });
 
     test('launch jsdos in extension host direct', async function () {
-        const ci = await api.jsdos.runInHost(undefined,false);
+        const ci = await api.jsdos.runInHost(undefined, false);
         assert.ok(typeof ci.width() === 'number');
+
+        if(!process.platform){
+            this.skip();
+        }
+        const t = ci.terminal();
+        t.show();
+        const testStr = randomString();
+        t.sendText(`echo ${testStr}\r`);
+        const p = new Promise<string>(
+            resolve => {
+                let stdout = "";
+                ci.events().onStdout(val => {
+                    stdout += val;
+                    if (stdout.includes(testStr)) {
+                        setTimeout(() => {
+                            resolve(stdout);
+                        });
+                    }
+                });
+            }
+        );
+        const stdout=await p;
+        assert.ok(stdout,stdout);
         ci.exit();
+        t.dispose();
     });
 
     test('launch jsdos in extension host webworker', async function () {
-        if(process.platform){
+        if (process.platform) {
             this.skip();
         }
-        const ci = await api.jsdos.runInHost(undefined,true);
+        const ci = await api.jsdos.runInHost(undefined, true);
         assert.ok(typeof ci.width() === 'number');
         ci.exit();
     });
