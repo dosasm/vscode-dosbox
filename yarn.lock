@@ -101,7 +101,7 @@
 
 "@types/glob@^7.2.0":
   version "7.2.0"
-  resolved "https://registry.npmmirror.com/@types/glob/download/@types/glob-7.2.0.tgz#bc1b5bf3aa92f25bd5dd39f35c57361bdce5b2eb"
+  resolved "https://registry.npmmirror.com/@types/glob/download/@types/glob-7.2.0.tgz?cache=0&sync_timestamp=1637280950333&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2F%40types%2Fglob%2Fdownload%2F%40types%2Fglob-7.2.0.tgz#bc1b5bf3aa92f25bd5dd39f35c57361bdce5b2eb"
   integrity sha1-vBtb86qS8lvV3TnzXFc2G9zlsus=
   dependencies:
     "@types/minimatch" "*"
@@ -119,7 +119,7 @@
 
 "@types/mocha@^9.0.0":
   version "9.0.0"
-  resolved "https://registry.npmmirror.com/@types/mocha/download/@types/mocha-9.0.0.tgz#3205bcd15ada9bc681ac20bef64e9e6df88fd297"
+  resolved "https://registry.npmmirror.com/@types/mocha/download/@types/mocha-9.0.0.tgz?cache=0&sync_timestamp=1637291742828&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2F%40types%2Fmocha%2Fdownload%2F%40types%2Fmocha-9.0.0.tgz#3205bcd15ada9bc681ac20bef64e9e6df88fd297"
   integrity sha1-MgW80Vram8aBrCC+9k6ebfiP0pc=
 
 "@types/node@*":
@@ -607,7 +607,7 @@ braces@^3.0.1, braces@~3.0.2:
 browser-or-node@^2.0.0:
   version "2.0.0"
   resolved "https://registry.npmmirror.com/browser-or-node/download/browser-or-node-2.0.0.tgz#808ea90282a670931cdc0ea98166538a50dd0d89"
-  integrity sha1-gI6pAoKmcJMc3A6pgWZTilDdDYk=
+  integrity sha512-3Lrks/Okgof+/cRguUNG+qRXSeq79SO3hY4QrXJayJofwJwHiGC0qi99uDjsfTwULUFSr1OGVsBkdIkygKjTUA==
 
 browser-stdout@1.3.1:
   version "1.3.1"
@@ -1330,7 +1330,7 @@ eslint-visitor-keys@^3.0.0, eslint-visitor-keys@^3.1.0:
 eslint@^8.3.0:
   version "8.3.0"
   resolved "https://registry.npmmirror.com/eslint/download/eslint-8.3.0.tgz#a3c2409507403c1c7f6c42926111d6cbefbc3e85"
-  integrity sha1-o8JAlQdAPBx/bEKSYRHWy++8PoU=
+  integrity sha512-aIay56Ph6RxOTC7xyr59Kt3ewX185SaGnAr8eWukoPLeriCrvGjvAubxuvaXOfsxhtwV5g0uBOsyhAom4qJdww==
   dependencies:
     "@eslint/eslintrc" "^1.0.4"
     "@humanwhocodes/config-array" "^0.6.0"
@@ -3749,7 +3749,7 @@ typed-rest-client@^1.8.4:
 typescript@^4.5.2:
   version "4.5.2"
   resolved "https://registry.npmmirror.com/typescript/download/typescript-4.5.2.tgz#8ac1fba9f52256fdb06fb89e4122fa6a346c2998"
-  integrity sha1-isH7qfUiVv2wb7ieQSL6ajRsKZg=
+  integrity sha512-5BlMof9H1yGt0P8/WF+wPNw6GfctgGjXp5hkblpyT+8rkASSmkUKMXrxR0Xg8ThVCi/JnHQiKXeBaEwCeQwMFw==
 
 uc.micro@^1.0.1, uc.micro@^1.0.5:
   version "1.0.6"
@@ -3804,7 +3804,7 @@ uri-js@^4.2.2:
 
 url-join@^4.0.1:
   version "4.0.1"
-  resolved "https://registry.nlark.com/url-join/download/url-join-4.0.1.tgz#b642e21a2646808ffa178c4c5fda39844e12cde7"
+  resolved "https://registry.npmmirror.com/url-join/download/url-join-4.0.1.tgz#b642e21a2646808ffa178c4c5fda39844e12cde7"
   integrity sha1-tkLiGiZGgI/6F4xMX9o5hE4Szec=
 
 url-parse-lax@^3.0.0:
