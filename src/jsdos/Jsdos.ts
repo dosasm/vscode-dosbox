@@ -21,7 +21,6 @@ export class Jsdos implements api.Jsdos {
         const dist = vscode.Uri.joinPath(context.extensionUri, "/node_modules/emulators/dist/");
         this.pathPrefix = dist.scheme === "file" ? dist.fsPath : dist.toString();
 
-        logger.channel(JSON.stringify(context.extensionUri)).show();
         //take over HTTP request for running as web extension
         emulators.HTTPRequest = async function (url: string, options: any): Promise<string | ArrayBuffer> {
             const filename = url.substr(url.lastIndexOf("/") + 1);

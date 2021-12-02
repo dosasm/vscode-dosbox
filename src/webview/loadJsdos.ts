@@ -50,7 +50,7 @@ async function fromBundleData(bundleData: Uint8Array) {
     layers.hideLoadingLayer();
     emulatorsUi.graphics.webGl(layers, ci);
     emulatorsUi.controls.keyboard(layers, ci);
-    emulatorsUi.controls.mouse(layers, ci);
+    emulatorsUi.controls.mouse(false, 1.0, layers, ci);
 
     emulatorsUi.sound.audioNode(ci);
     return ci;
