@@ -6,25 +6,12 @@ const os = require('os');
 
 const cwd = path.resolve(__dirname, '..');
 
-let { platform, arch } = process;
-let target = platform + '-' + arch;
+const validTargets = [
+    "win32-x64", "win32-ia32", "win32-arm64", "linux-x64", "linux-arm64", "linux-armhf", "darwin-x64", "darwin-arm64", "alpine-x64", "alpine-arm64", "web"
+];
 
-const targetIdx = process.argv.findIndex(val => val.includes('--target'));
-if (targetIdx >= 0) {
-    target = process.argv[targetIdx + 1].startsWith('web') ? 'web' : process.argv[targetIdx + 1];
-    [platform, arch] = target.split('-');
-}
-
-
-const packagePath = `${pak.name}-${target}-${pak.version}.vsix`;
-console.log(`
-start creating package in platform:${process.platform},arch:${process.arch}
-target: ${packagePath}
-`, { target, platform, arch });
-
-main();
-
-async function main() {
+async function package(platform, arch) {
+    const target = platform + (arch ? "-"+arch : "");
     const ignorePath = path.resolve(cwd, '.vscodeignore');
     const _vscodeignore = await fs.promises.readFile(ignorePath, { encoding: 'utf-8' });
 
@@ -77,5 +64,36 @@ async function main() {
     await vsce.createVSIX({ target, useYarn: true });
 
     await fs.promises.writeFile(ignorePath, _vscodeignore);
+
+    const packagePath = `${pak.name}-${target}-${pak.version}.vsix`;
+    console.log(`
+start creating package in platform:${process.platform},arch:${process.arch}
+package path: ${packagePath}
+`, { target, platform, arch });
 }
+
+async function main(){
+    if (process.argv.includes("--all")) {
+        for (const target of validTargets) {
+         [platform, arch] = target.split('-');
+            await package(platform,arch);
+        }
+    }
+    else if (process.argv.includes("--target")) {
+        const targetIdx = process.argv.findIndex(val => val.includes('--target'));
+        if (targetIdx >= 0) {
+            target = process.argv[targetIdx + 1].startsWith('web') ? 'web' : process.argv[targetIdx + 1];
+            [platform, arch] = target.split('-');
+            await package(platform,arch);
+        }
+    }
+    else {
+        let { platform, arch } = process;
+        await package(platform,arch);
+    }
+}
+
+main();
+
+
 
