@@ -6,6 +6,7 @@ node_modules/**
 .gitignore
 .gitmodules
 vsc-extension-quickstart.md
+README.*.md
 webpack.config.js
 .yarnrc
 **/tsconfig.json
@@ -17,7 +18,8 @@ webpack.config.js
 .github/
 
 !node_modules/emulators*/package.json
-!node_modules/emulators*/dist/*.*
+!node_modules/emulators/dist/w*.*
+!node_modules/emulators-ui/dist/*.*
 **/test/
 
 web/
