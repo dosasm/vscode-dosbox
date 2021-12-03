@@ -5,9 +5,11 @@ import * as jsdos from './jsdos/main';
 import { emulators } from './jsdos/runInHost';
 export { API } from './api';
 import * as D from './api';
+import { logger } from './util/logger';
 
 export async function activate(context: vscode.ExtensionContext): Promise<D.API> {
 	console.log('run in nonweb mode:' + context.extensionMode.toString());
+	logger.logExtensionInfo(context);
 
 	const api = {
 		...await dosbox.activate(context),
