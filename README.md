@@ -80,6 +80,14 @@ then set the following setting in your VSCode's settings
 "vscode-dosbox.command.dosboxX":"flatpak run com.dosbox_x.DOSBox-X",
 ```
 
+you may need to change output of SDL for better screen effect
+
+```json
+"vscode-dosbox.dosbox.config": {
+   "SDL.output":"overlay",
+}
+```
+
 ## Extension Settings
 
 This extension contributes the following settings:

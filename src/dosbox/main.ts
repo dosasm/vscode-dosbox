@@ -6,6 +6,18 @@ import { logger } from '../util/logger';
 
 const fs = vscode.workspace.fs;
 
+function updateDosboxConf(box: db.DOSBox, confSting: string) {
+	const settings = vscode.workspace.getConfiguration("vscode-dosbox");
+	const dosboxConf: { [id: string]: string } | undefined = settings.get(confSting);
+	if (dosboxConf) {
+		for (const id in dosboxConf) {
+			const [section, key] = id.toLowerCase().split('.');
+			const value = dosboxConf[id];
+			box.updateConf(section, key, value);
+		}
+	}
+}
+
 export async function activate(context: vscode.ExtensionContext) {
 
 	const dosboxConfigurationFile = {
@@ -50,6 +62,17 @@ export async function activate(context: vscode.ExtensionContext) {
 	const dosboxXlog = vscode.Uri.joinPath(context.logUri, 'dosbox-x.log');
 	dosboxX.updateConf('log', 'logfile', dosboxXlog.fsPath);
 	logger.channel('dosbox-x log at: ' + dosboxXlog.fsPath + '\n');
+
+	updateDosboxConf(dosbox, "dosbox.config");
+	updateDosboxConf(dosboxX, "dosboxX.config");
+	vscode.workspace.onDidChangeConfiguration(e => {
+		if (e.affectsConfiguration("vscode-dosbox.dosbox.config")) {
+			updateDosboxConf(dosbox, "dosbox.config");
+		}
+		if (e.affectsConfiguration("vscode-dosbox.dosboxX.config")) {
+			updateDosboxConf(dosboxX, "dosboxX.config");
+		}
+	});
 
 	let disposable1 = vscode.commands.registerCommand('dosbox.openDosbox', (params?: string[], cpHandler?: (p: cp.ChildProcess) => void) => {
 		return dosbox.run(params, cpHandler);

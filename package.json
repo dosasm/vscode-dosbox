@@ -65,6 +65,22 @@
 						"type": "string",
 						"markdownDescription": "The command for open your DOSBox-x\n\n By default the extension will pass dosbox parameters after the command, use `<param>` if you want to insert"
 					},
+					"vscode-dosbox.dosbox.config": {
+						"type": "object",
+						"additionalProperties": {
+						  "type": "string"
+						},
+						"default": {},
+						"markdownDescription": "The configurations for dosbox, will be write to the `dosbox.conf` file"
+					  },
+					  "vscode-dosbox.dosboxX.config": {
+						"type": "object",
+						"additionalProperties": {
+						  "type": "string"
+						},
+						"default": {},
+						"markdownDescription": "The configurations for dosbox-x,will be write to the `dosbox-x.conf` file"
+					  },
 					"vscode-dosbox.dosboxX.lang": {
 						"type": "string",
 						"default": "follow",

@@ -40,6 +40,14 @@ brew install dosbox-x
 "vscode-dosbox.command.dosbox":"open -a dosbox --args",
 ```
 
+可能需要修改sdl输出方式，来使显示效果满意，例如：
+
+```json
+"vscode-dosbox.dosbox.config": {
+   "SDL.output":"overlay",
+}
+```
+
 ### 在mac平台从zip文件安装DOSBox-x
 
 1. 从dosbox-x的 [官网](https://dosbox-x.com) 下载zip压缩包文件
