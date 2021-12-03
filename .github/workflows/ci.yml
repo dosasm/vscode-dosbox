@@ -94,7 +94,7 @@ jobs:
           name: "vscepackages"
           path: "*.vsix"
   
-      - run: npx vsce publish --packagePath $(find . -iname *.vsix)
+      - run: npx vsce publish --packagePath $(find . -iname "*.vsix")
         env:
           VSCE_PAT: ${{ secrets.VSCE_PAT }}
         if: success() && startsWith( github.ref, 'refs/tags/')
