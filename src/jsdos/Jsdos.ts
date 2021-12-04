@@ -19,18 +19,27 @@ export class Jsdos implements api.Jsdos {
 
     constructor(private context: vscode.ExtensionContext) {
         const dist = vscode.Uri.joinPath(context.extensionUri, "/node_modules/emulators/dist/");
-        this.pathPrefix = dist.scheme === "file" ? dist.fsPath : dist.toString();
+
+        //take over path resolve method for file in extension has different schema
+        // - in Browser has a schema of http
+        // - in Machine has a schema of file
+        emulators.pathResolver = function (filename: string) {
+            const uri = vscode.Uri.joinPath(dist, filename);
+            return dist.scheme === "file" ? uri.fsPath : uri.toString(true);
+        };
 
         //take over HTTP request for running as web extension
-        emulators.HTTPRequest = async function (url: string, options: any): Promise<string | ArrayBuffer> {
-            const filename = url.substr(url.lastIndexOf("/") + 1);
-            const inExt = vscode.Uri.joinPath(dist, filename);
-            const fileArr = await fs.readFile(inExt);
+        emulators.HTTPRequest = async function (url: string, options: any): Promise<string | ArrayBuffer | undefined> {
+            const uri = process.platform ? vscode.Uri.file(url) : vscode.Uri.parse(url);
+            const fileArr = await fs.readFile(uri);
             console.log(url, options);
-            if (options.responseType === "arraybuffer") {
-                return fileArr;
+            if (uri.path.includes(context.extensionUri.path)) {
+                if (options.responseType === "arraybuffer") {
+                    return fileArr;
+                }
+                return new TextDecoder().decode(fileArr);
             }
-            return new TextDecoder().decode(fileArr);
+            return undefined;
         };
     }
 

@@ -8,7 +8,7 @@ import DosBundle from "../dos/bundle/dos-bundle";
 import { dosDirect } from "../dos/dosbox/ts/direct";
 import { dosWorker } from "../dos/dosbox/ts/worker";
 import Janus from "../janus/janus-impl";
-import { setHTTPRequest } from "../http";
+import { setHTTPRequest,ReadContent} from "../http";
 
 import { TransportLayer, CommandInterfaceOverTransportLayer } from "../protocol/protocol";
 
@@ -16,11 +16,16 @@ class EmulatorsImpl implements Emulators {
     pathPrefix = "";
     cacheSeed = "";
 
-    public set HTTPRequest(r: ((url: string, options: any)=> Promise<string | ArrayBuffer>)){
+    public set HTTPRequest(r: ReadContent){
         setHTTPRequest(r);
     }
+    public pathResolver:((filename:string)=>string)=(filename:string)=>{
+        if (this.pathPrefix.length > 0 && this.pathPrefix[this.pathPrefix.length - 1] !== "/") {
+            this.pathPrefix += "/";
+        }
+        return this.pathPrefix+filename};
 
-    private cachePromises: { [cacheName: string]: Promise<Cache> } = {};
+    private cachePromises: {[cacheName: string]: Promise<Cache>} = {};
     private wasmModulesPromise?: Promise<IWasmModules>;
 
     cache(cacheName?: string): Promise<Cache> {
@@ -62,7 +67,8 @@ class EmulatorsImpl implements Emulators {
     async dosboxWorker(bundle: Uint8Array | Uint8Array[]): Promise<CommandInterface> {
         const modules = await this.wasmModules();
         const dosboxWasm = await modules.dosbox();
-        const transportLayer = await dosWorker(this.pathPrefix + "wdosbox.js", dosboxWasm, "session-" + Date.now());
+        const workerPath=this.pathResolver("wdosbox.js");
+        const transportLayer = await dosWorker(workerPath, dosboxWasm, "session-" + Date.now());
         return this.backend(bundle, transportLayer);
     }
 
@@ -94,7 +100,7 @@ class EmulatorsImpl implements Emulators {
 
         const make = async () => {
             const cache = await this.cache();
-            return new WasmModulesImpl(this.pathPrefix, cache);
+            return new WasmModulesImpl(this.pathResolver, cache);
         }
 
         this.wasmModulesPromise = make();

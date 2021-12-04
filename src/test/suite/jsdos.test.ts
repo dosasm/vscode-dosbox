@@ -8,7 +8,7 @@ import { randomString } from './util';
 
 let api: myExtension.API;
 
-export const jsdosNodeTestSuite = suite('test jsdos API', function () {
+export const jsdosHostTestSuite = suite('test jsdos API', function () {
 
     this.beforeEach(async function () {
         const extension = vscode.extensions.getExtension('xsro.vscode-dosbox');
@@ -22,8 +22,9 @@ export const jsdosNodeTestSuite = suite('test jsdos API', function () {
         const ci = await api.jsdos.runInHost(undefined, false);
         assert.ok(typeof ci.width() === 'number');
 
-        if(!process.platform){
-            this.skip();
+        if (!process.platform) {
+            this.timeout(10000);
+            this.retries(3);
         }
         const t = ci.terminal();
         t.show();
@@ -42,14 +43,14 @@ export const jsdosNodeTestSuite = suite('test jsdos API', function () {
                 });
             }
         );
-        const stdout=await p;
-        assert.ok(stdout,stdout);
+        const stdout = await p;
+        assert.ok(stdout, stdout);
         ci.exit();
         t.dispose();
     });
 
     test('launch jsdos in extension host webworker', async function () {
-        if (process.platform) {
+        if (process.platform !== undefined) {
             this.skip();
         }
         const ci = await api.jsdos.runInHost(undefined, true);

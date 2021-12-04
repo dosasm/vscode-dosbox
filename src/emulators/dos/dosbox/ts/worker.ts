@@ -9,10 +9,6 @@ export async function dosWorker(workerUrl: string,
     const messagesQueue = new MessagesQueue();
     let handler: MessageHandler = messagesQueue.handler.bind(messagesQueue);
 
-    if(typeof window!=='undefined'){
-
-    }
-
     let worker:Worker
 
     //if runs in webview we need to use fetch API to re

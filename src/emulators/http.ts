@@ -8,15 +8,27 @@ export interface XhrOptions {
     responseType?: XMLHttpRequestResponseType;
 }
 
-export let HTTPRequest = XhrRequest;
-export function setHTTPRequest(r:((url: string, options: any)=> Promise<string | ArrayBuffer>)){
-HTTPRequest=r;
+
+export type ReadContent=((url: string, options: XhrOptions)=> Promise<string | ArrayBuffer | undefined>)
+
+let _readContent:ReadContent|undefined=undefined
+export function setHTTPRequest(r:ReadContent){
+    _readContent=r;
+}
+export let HTTPRequest = async function(url: string, options: XhrOptions):Promise<string | ArrayBuffer>{
+    if(_readContent){
+        const r=await _readContent(url,options);
+        if(r!==undefined){
+            return r;
+        }
+    }
+    return XhrRequest(url,options);
 }
 
 // # XhrRequest
 // `XhrRequest` is small wrapper over XMLHttpRequest, that provides some
 // handy methods
-function XhrRequest(url: string, options: XhrOptions): Promise<string | ArrayBuffer> {
+async function XhrRequest(url: string, options: XhrOptions): Promise<string | ArrayBuffer> {
     return new Promise<string | ArrayBuffer>((resolve, reject) => {
         new Xhr(url, {
             ...options,

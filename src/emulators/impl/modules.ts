@@ -1,7 +1,23 @@
 /* eslint no-self-assign: 0 */
 /* eslint @typescript-eslint/no-var-requires: 0 */
+
 import { Cache } from "../cache";
 import { HTTPRequest } from "../http";
+import * as bon from "browser-or-node";
+
+let globalObj={};
+if(bon.isBrowser){
+    globalObj=window as any;
+}
+else if(bon.isNode){
+    globalObj=global as any;
+}
+else if(bon.isWebWorker){
+    globalObj=self as any;
+}else{
+    globalObj={} as any;
+}
+
 
 export interface WasmModule {
     instantiate: (module?: any) => Promise<any>;
@@ -13,20 +29,16 @@ export interface IWasmModules {
 }
 
 interface Globals {
-    exports: { [moduleName: string]: any },
-    compiled: { [moduleName: string]: Promise<WasmModule> },
+    exports: {[moduleName: string]: any},
+    compiled: {[moduleName: string]: Promise<WasmModule>},
 }
 
 class Host {
     public wasmSupported = false;
     public globals: Globals;
     constructor() {
-        this.globals = typeof window !== "undefined" 
-        ?  window as any
-        : typeof self !== "undefined" ? 
-        self as any
-        :{}
-
+        this.globals=globalObj as any;
+        
         if (!this.globals.exports) {
             this.globals.exports = {};
         }
@@ -62,12 +74,12 @@ class Host {
             Math.imul = Math.imul;
 
             if (!Math.fround) {
-                Math.fround = function (x) { return x; };
+                Math.fround = function(x) { return x; };
             }
             Math.fround = Math.fround;
 
             if (!Math.clz32) {
-                Math.clz32 = function (x) {
+                Math.clz32 = function(x) {
                     x = x >>> 0;
                     for (let i = 0; i < 32; i++) {
                         if (x & (1 << (31 - i))) { return i; }
@@ -78,7 +90,7 @@ class Host {
             Math.clz32 = Math.clz32;
 
             if (!Math.trunc) {
-                Math.trunc = function (x) {
+                Math.trunc = function(x) {
                     return x < 0 ? Math.ceil(x) : Math.floor(x);
                 };
             }
@@ -90,7 +102,6 @@ class Host {
 export const host = new Host();
 
 export class WasmModulesImpl implements IWasmModules {
-    private pathPrefix: string;
     private cache: Cache;
 
     private libzipPromise?: Promise<WasmModule>;
@@ -98,13 +109,9 @@ export class WasmModulesImpl implements IWasmModules {
 
     public wasmSupported = false;
 
-    constructor(pathPrefix: string,
+    constructor(
+        public pathResolver: (filename:string)=>string,
         cache: Cache) {
-        if (pathPrefix.length > 0 && pathPrefix[pathPrefix.length - 1] !== "/") {
-            pathPrefix += "/";
-        }
-
-        this.pathPrefix = pathPrefix;
         this.cache = cache;
     }
 
@@ -113,7 +120,7 @@ export class WasmModulesImpl implements IWasmModules {
             return this.libzipPromise;
         }
 
-        this.libzipPromise = this.loadModule(this.pathPrefix + "wlibzip.js", "WLIBZIP");
+        this.libzipPromise = this.loadModule(this.pathResolver("wlibzip.js"), "WLIBZIP");
         return this.libzipPromise;
     }
 
@@ -122,21 +129,21 @@ export class WasmModulesImpl implements IWasmModules {
             return this.dosboxPromise;
         }
 
-        this.dosboxPromise = this.loadModule(this.pathPrefix + "wdosbox.js", "WDOSBOX");
+        this.dosboxPromise = this.loadModule(this.pathResolver("wdosbox.js"), "WDOSBOX");
         return this.dosboxPromise;
     }
 
     private loadModule(url: string,
-        moduleName: string) {
+                       moduleName: string) {
         // eslint-disable-next-line
-        return loadWasmModule(url, moduleName, this.cache, () => { });
+        return loadWasmModule(url, moduleName, this.cache, () => {});
     }
 }
 
 export function loadWasmModule(url: string,
-    moduleName: string,
-    cache: Cache,
-    onprogress: (stage: string, total: number, loaded: number) => void): Promise<WasmModule> {
+                               moduleName: string,
+                               cache: Cache,
+                               onprogress: (stage: string, total: number, loaded: number) => void): Promise<WasmModule> {
     if (typeof XMLHttpRequest === "undefined") {
         return loadWasmModuleNode(url, moduleName, cache, onprogress);
     } else {
@@ -145,11 +152,11 @@ export function loadWasmModule(url: string,
 }
 
 function loadWasmModuleNode(url: string,
-    moduleName: string,
-    // eslint-disable-next-line
-    cache: Cache,
-    // eslint-disable-next-line
-    onprogress: (stage: string, total: number, loaded: number) => void) {
+                            moduleName: string,
+                            // eslint-disable-next-line
+                            cache: Cache,
+                            // eslint-disable-next-line
+                            onprogress: (stage: string, total: number, loaded: number) => void) {
     if (host.globals.compiled[moduleName] !== undefined) {
         return host.globals.compiled[moduleName];
     }
@@ -164,9 +171,9 @@ function loadWasmModuleNode(url: string,
 }
 
 function loadWasmModuleBrowser(url: string,
-    moduleName: string,
-    cache: Cache,
-    onprogress: (stage: string, total: number, loaded: number) => void) {
+                          moduleName: string,
+                          cache: Cache,
+                          onprogress: (stage: string, total: number, loaded: number) => void) {
     if (host.globals.compiled[moduleName] !== undefined) {
         return host.globals.compiled[moduleName];
     }
@@ -204,19 +211,11 @@ function loadWasmModuleBrowser(url: string,
             return; // no-return
         };
 
-        eval.call(
-            typeof window ==="object"
-            ?window
-            :self
-            ,script as string);
-            
-        if(host.globals.exports[moduleName]===undefined){
-            throw new Error("load wdosbox.js failed");
-        }
+        eval.call(globalObj, script as string);
 
         return new CompiledBrowserModule(wasmModule,
-            host.globals.exports[moduleName],
-            instantiateWasm);
+                                         host.globals.exports[moduleName],
+                                         instantiateWasm);
     }
 
     const promise = load();
