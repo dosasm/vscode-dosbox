@@ -1,9 +1,8 @@
-.vscode/**
-.vscode-test-web/**
+.*/**
+.*ignore
 src/**
 out/**
 node_modules/**
-.gitignore
 .gitmodules
 vsc-extension-quickstart.md
 README.*.md
