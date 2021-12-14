@@ -2,6 +2,7 @@ import { WasmModule } from "../../../impl/modules";
 import { TransportLayer, MessageHandler, ClientMessage } from "../../../protocol/protocol";
 import { MessagesQueue } from "../../../protocol/messages-queue";
 import { isBrowser, isNode, isWebWorker, isJsDom, isDeno } from "browser-or-node";
+import { HTTPRequest } from "../../../http";
 
 export async function dosWorker(workerUrl: string,
                                  wasmModule: WasmModule,
@@ -11,17 +12,23 @@ export async function dosWorker(workerUrl: string,
 
     let worker:Worker
 
-    //if runs in webview we need to use fetch API to re
+    //runs in webview: use fetch to download the file
     if(isBrowser){
-        const blob =await fetch(workerUrl)
-            .then(result => result.blob());
+        const res =await fetch(workerUrl)
+        const blob=await  res.blob()
         const blobUrl = URL.createObjectURL(blob);
         worker = new Worker(blobUrl);
     }
+    //runs in web extension host
+    else if(isWebWorker){
+        worker=new Worker(workerUrl);
+    }
+    //runs in nodejs extension host: not work now 
     else if(isNode){
         const {Worker} = eval("require")('worker_threads');
         worker=new Worker(workerUrl);
     }
+    //others
     else{
         worker=new Worker(workerUrl);
     }
