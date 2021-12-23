@@ -130,7 +130,7 @@
     ]
   },
   "scripts": {
-    "test": "vscode-test-web --browserType=chromium --extensionDevelopmentPath=. --extensionTestsPath=dist/web/test/suite/index.js",
+    "test": "vscode-test-web --extensionDevelopmentPath=. --extensionTestsPath=dist/web/test/suite/index.js",
     "pretest": "yarn run compile",
     "compile-tsc": "tsc -p .",
     "test-local": "tsc -p . && node out/test/runTest.js",
@@ -139,7 +139,7 @@
     "watch": "webpack --watch",
     "package": "webpack --mode production --devtool hidden-source-map",
     "lint": "eslint src --ext ts",
-    "run-in-browser": "vscode-test-web --browserType=chromium --extensionDevelopmentPath=. ",
+    "run-in-browser": "vscode-test-web --extensionDevelopmentPath=. ",
     "prepare": "husky install"
   },
   "lint-staged": {

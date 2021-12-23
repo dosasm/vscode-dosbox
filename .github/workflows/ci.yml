@@ -46,7 +46,11 @@ jobs:
       - name: install and test
         run: |
           yarn install
-          yarn test && yarn test-local
+          yarn test --browserType=firefox
+          yarn test --browserType=chromium
+          yarn test --browserType=webkit
+          yarn test-local
+        continue-on-error: true
         working-directory: ./vscode-dosbox
         env:
           DISPLAY: ":99.0"
